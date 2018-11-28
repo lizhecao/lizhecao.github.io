@@ -699,28 +699,6 @@
 
 
 
-  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
-  
-  <script type="text/javascript">
-    var GUEST = ['nick','mail','link'];
-    var guest = 'nick,mail,link';
-    guest = guest.split(',').filter(item=>{
-      return GUEST.indexOf(item)>-1;
-    });
-    new Valine({
-        el: '#comments' ,
-        verify: false,
-        notify: false,
-        appId: 'dnCoNeBEBuo7SYbqa5W3d38H-gzGzoHsz',
-        appKey: 'NdMUK9Jfo9k52DijcO8LiNIx',
-        placeholder: 'Just Go Go',
-        avatar:'mm',
-        guest_info:guest,
-        pageSize:'10' || 10,
-    });
-  </script>
-
 
 
   
@@ -733,7 +711,7 @@
 
   
   <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
-  <script>AV.initialize("", "");</script>
+  <script>AV.initialize("dnCoNeBEBuo7SYbqa5W3d38H-gzGzoHsz", "NdMUK9Jfo9k52DijcO8LiNIx");</script>
   <script>
     function showTime(Counter) {
       var query = new AV.Query(Counter);
@@ -854,7 +832,7 @@
   
   <!-- custom analytics part create by xiamo -->
 <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
-<script>AV.initialize("", "");</script>
+<script>AV.initialize("dnCoNeBEBuo7SYbqa5W3d38H-gzGzoHsz", "NdMUK9Jfo9k52DijcO8LiNIx");</script>
 <script>
 function showTime(Counter) {
 	var query = new AV.Query(Counter);

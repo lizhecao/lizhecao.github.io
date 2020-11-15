@@ -7,6 +7,7 @@ tags:
         - 工具
 categories:
         - 工具开发
+typora-root-url: ../../source
 ---
 
 
@@ -18,5 +19,5 @@ categories:
 就省了吧，在conf.py配置文件中输入用户名密码，运行下脚本就可以了，还有要配置下图片存储路径
 
 # 成果
-![image.png](https://upload-images.jianshu.io/upload_images/5232414-874c45e00b298d7f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![image.png](/images/qq空间相册-批量下载-python脚本/qq图片下载成果截图.png)
 

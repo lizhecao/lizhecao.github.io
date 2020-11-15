@@ -146,7 +146,7 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5232414-49c277e62f77221a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5232414-84ec195560e33e46.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5232414-74ba87c59d679d61.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-11-29T07:40:44.700Z">
+<meta property="og:updated_time" content="2020-11-15T07:31:17.997Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="我的马拉松流水账(一)">
 <meta name="twitter:description" content="同样是十年，与其稀里糊涂地活过，目标明确、生气勃勃地活当然令人远为满意。在个人的局限性中，可以让自己有效地燃烧，哪怕一丁点儿，这便是跑步一事的本质，也是活着一事的隐喻 ——村上春树  转眼间，从开始跑步到现在已经将近三年了。从整天都宅在宿舍的典型IT男，到现在居然跑了北京马拉松（国马），跑者心目中的朝圣之马，而且还跑了个自己还算满意的成绩，想来真是很有意思的经历，所以这里要记录一二。 开始跑步">
@@ -460,12 +460,24 @@
                 
               
 
-              <time title="创建时间：2018-11-29 15:29:48 / 修改时间：15:40:44" itemprop="dateCreated datePublished" datetime="2018-11-29T15:29:48+08:00">2018-11-29</time>
+              <time title="创建时间：2018-11-29 15:29:48" itemprop="dateCreated datePublished" datetime="2018-11-29T15:29:48+08:00">2018-11-29</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-11-15 15:31:17" itemprop="dateModified" datetime="2020-11-15T15:31:17+08:00">2020-11-15</time>
               
             
           </span>
@@ -1006,6 +1018,22 @@
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+<script>
+var link = "" ;
+// 遍历所有的img标签
+$("img").each( (i,o) => {
+    var o = $(o);
+    // 判断图片的链接是否包含sinaimg关键字
+    if( o.attr("src").indexOf("sinaimg") > 0 ){
+        // 给这个标签加上referrerPlicy属性
+        o.attr("referrerpolicy","no-referrer");
+        // 备份图片的src
+        link = o.attr("src");
+        // 重新设置src，让页面重新加载一次图片
+        o.attr("src",link);
+    }
+});
+</script>
 
 
 

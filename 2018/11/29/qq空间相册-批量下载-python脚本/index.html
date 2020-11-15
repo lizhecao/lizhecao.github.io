@@ -121,7 +121,7 @@
 <meta property="og:description" content="起因心血来潮，想要整理一把老照片，都放到一处管理。有些老照片是放在qq空间上的，找了网上基本没什么软件，有的也是坑。索性自己写个python+selenium 脚本搞一搞代码位置：https://github.com/lizhecao/qq-photo-download 简单演示就省了吧，在conf.py配置文件中输入用户名密码，运行下脚本就可以了，还有要配置下图片存储路径 成果">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/5232414-874c45e00b298d7f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-11-29T09:03:11.885Z">
+<meta property="og:updated_time" content="2020-11-15T07:31:05.289Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="qq空间相册 批量下载 python脚本">
 <meta name="twitter:description" content="起因心血来潮，想要整理一把老照片，都放到一处管理。有些老照片是放在qq空间上的，找了网上基本没什么软件，有的也是坑。索性自己写个python+selenium 脚本搞一搞代码位置：https://github.com/lizhecao/qq-photo-download 简单演示就省了吧，在conf.py配置文件中输入用户名密码，运行下脚本就可以了，还有要配置下图片存储路径 成果">
@@ -435,12 +435,24 @@
                 
               
 
-              <time title="创建时间：2018-11-29 15:51:48 / 修改时间：17:03:11" itemprop="dateCreated datePublished" datetime="2018-11-29T15:51:48+08:00">2018-11-29</time>
+              <time title="创建时间：2018-11-29 15:51:48" itemprop="dateCreated datePublished" datetime="2018-11-29T15:51:48+08:00">2018-11-29</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2020-11-15 15:31:05" itemprop="dateModified" datetime="2020-11-15T15:31:05+08:00">2020-11-15</time>
               
             
           </span>
@@ -908,6 +920,22 @@
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+<script>
+var link = "" ;
+// 遍历所有的img标签
+$("img").each( (i,o) => {
+    var o = $(o);
+    // 判断图片的链接是否包含sinaimg关键字
+    if( o.attr("src").indexOf("sinaimg") > 0 ){
+        // 给这个标签加上referrerPlicy属性
+        o.attr("referrerpolicy","no-referrer");
+        // 备份图片的src
+        link = o.attr("src");
+        // 重新设置src，让页面重新加载一次图片
+        o.attr("src",link);
+    }
+});
+</script>
 
 
 

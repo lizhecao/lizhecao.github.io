@@ -9,6 +9,7 @@ categories:
         - 工具开发
 ---
 
+
 # 起因
 心血来潮，想要整理一把老照片，都放到一处管理。有些老照片是放在qq空间上的，找了网上基本没什么软件，有的也是坑。索性自己写个python+selenium 脚本搞一搞
 代码位置：https://github.com/lizhecao/qq-photo-download

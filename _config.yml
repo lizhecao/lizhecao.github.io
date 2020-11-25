@@ -81,15 +81,15 @@ theme: next
 deploy:
   - type: git
     repo: git@github.com:lizhecao/lizhecao.github.io.git
-  - type: leancloud_counter_security_sync
+  # - type: leancloud_counter_security_sync
     branch: master
 
 leancloud_counter_security:
-  enable_sync: false
+  enable_sync: true
   app_id: dnCoNeBEBuo7SYbqa5W3d38H-gzGzoHsz
   app_key: NdMUK9Jfo9k52DijcO8LiNIx
-  username: zhecaoli
-  password: 13570237269asd
+  username: kaixuan
+  password: zkx@910924
 
 search:
   path: search.xml

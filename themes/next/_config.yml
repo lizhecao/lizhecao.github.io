@@ -582,7 +582,7 @@ comments:
 # Disqus
 disqus:
   enable: false
-  shortname:
+  shortname: zhecao
   count: true
   #post_meta_order: 0
 
@@ -610,8 +610,8 @@ changyan:
 # Valine
 # For more information: https://valine.js.org, https://github.com/xCss/Valine
 valine:
-  enable: false
-  appid: oNeBEBuo7SYbqa5W3d38H-gzGzoHsz
+  enable: true
+  appid: dnCoNeBEBuo7SYbqa5W3d38H-gzGzoHsz
   appkey: NdMUK9Jfo9k52DijcO8LiNIx
   notify: false # Mail notifier
   verify: false # Verification code
@@ -676,7 +676,7 @@ google_analytics:
   only_pageview: false
 
 # Baidu Analytics
-baidu_analytics: # <app_id>
+baidu_analytics: 52c6b3df8557c2b8fb3d611ee81ab31c
 
 # Growingio Analytics
 growingio_analytics: # <project_id>

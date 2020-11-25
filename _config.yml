@@ -4,8 +4,8 @@
 
 # Site
 title: 李哲操的博客
-subtitle: 喜欢跑步游泳的码农
-description: 
+subtitle: 人的劣性很难去改变，但可贵的是我们仍然在不断地挑战它
+description: It is never too late to mend
 keywords:
 author: 李哲操
 language: zh-CN
@@ -84,14 +84,8 @@ deploy:
   - type: leancloud_counter_security_sync
     branch: master
 
-# LeanCloud
-# leancloud_visitors:
-#   enable: false
-#   app_id: dnCoNeBEBuo7SYbqa5W3d38H-gzGzoHsz
-#   app_key: NdMUK9Jfo9k52DijcO8LiNIx
-
 leancloud_counter_security:
-  enable_sync: true
+  enable_sync: false
   app_id: dnCoNeBEBuo7SYbqa5W3d38H-gzGzoHsz
   app_key: NdMUK9Jfo9k52DijcO8LiNIx
   username: zhecaoli

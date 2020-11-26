@@ -3,10 +3,11 @@ title: resilience4j-feign源码分析
 date: 2020-11-25 09:00:48
 tags:
         - 源码学习
-        - java
-	- 装饰器模式
-categories:
         - 并发
+		- java
+		- 装饰器模式
+categories:
+        - java
 typora-root-url: ../../source
 ---
 

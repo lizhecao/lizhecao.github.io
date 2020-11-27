@@ -20,22 +20,20 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="iterm2 支持批量修改profiles，只不过这个功能比较难找到，备个案 先修改其中一个profile, 然后如下操作:preferences -&amp;gt; profiles -&amp;gt; 选中已经修改的profile -&amp;gt; (左下角) Other Actions -&amp;gt; Bulk copy from Selected Profile -&amp;gt; 勾选你要复制的配置(例如keys) -&amp;">
-<meta name="keywords" content="wiki,zsh">
+  <meta name="description" content="问题这几天突然发现线上调三方接口有些超时时间达到了16分钟，我们是通过feign okhttp的方式来调用的，而且设置了feign的okhttp超时时间的。而且我也看到有些请求确实是按照限制的10秒超时的。 12345678feign:  okhttp:    enabled: true  client:    config:      default:        connectTimeout">
+<meta name="keywords" content="java,okhttp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iterm2 批量修改profiles">
-<meta property="og:url" content="http://yoursite.com/2018/11/27/zsh-批量修改profiles/index.html">
+<meta property="og:title" content="记一次线上Okhttp超时问题定位.md">
+<meta property="og:url" content="http://yoursite.com/2020/11/26/记一次线上Okhttp超时问题定位-md/index.html">
 <meta property="og:site_name" content="李哲操的博客">
-<meta property="og:description" content="iterm2 支持批量修改profiles，只不过这个功能比较难找到，备个案 先修改其中一个profile, 然后如下操作:preferences -&amp;gt; profiles -&amp;gt; 选中已经修改的profile -&amp;gt; (左下角) Other Actions -&amp;gt; Bulk copy from Selected Profile -&amp;gt; 勾选你要复制的配置(例如keys) -&amp;">
+<meta property="og:description" content="问题这几天突然发现线上调三方接口有些超时时间达到了16分钟，我们是通过feign okhttp的方式来调用的，而且设置了feign的okhttp超时时间的。而且我也看到有些请求确实是按照限制的10秒超时的。 12345678feign:  okhttp:    enabled: true  client:    config:      default:        connectTimeout">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://yoursite.com/images/zsh-批量修改profiles/1-5457843.png">
-<meta property="og:updated_time" content="2020-11-15T16:34:02.793Z">
+<meta property="og:updated_time" content="2020-11-27T00:41:45.660Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iterm2 批量修改profiles">
-<meta name="twitter:description" content="iterm2 支持批量修改profiles，只不过这个功能比较难找到，备个案 先修改其中一个profile, 然后如下操作:preferences -&amp;gt; profiles -&amp;gt; 选中已经修改的profile -&amp;gt; (左下角) Other Actions -&amp;gt; Bulk copy from Selected Profile -&amp;gt; 勾选你要复制的配置(例如keys) -&amp;">
-<meta name="twitter:image" content="http://yoursite.com/images/zsh-批量修改profiles/1-5457843.png">
+<meta name="twitter:title" content="记一次线上Okhttp超时问题定位.md">
+<meta name="twitter:description" content="问题这几天突然发现线上调三方接口有些超时时间达到了16分钟，我们是通过feign okhttp的方式来调用的，而且设置了feign的okhttp超时时间的。而且我也看到有些请求确实是按照限制的10秒超时的。 12345678feign:  okhttp:    enabled: true  client:    config:      default:        connectTimeout">
 
-<link rel="canonical" href="http://yoursite.com/2018/11/27/zsh-批量修改profiles/">
+<link rel="canonical" href="http://yoursite.com/2020/11/26/记一次线上Okhttp超时问题定位-md/">
 
 
 <script id="page-configurations">
@@ -48,7 +46,7 @@
   };
 </script>
 
-  <title>iterm2 批量修改profiles | 李哲操的博客</title>
+  <title>记一次线上Okhttp超时问题定位.md | 李哲操的博客</title>
   
 
 
@@ -163,7 +161,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/27/zsh-批量修改profiles/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/26/记一次线上Okhttp超时问题定位-md/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -176,7 +174,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          iterm2 批量修改profiles
+          记一次线上Okhttp超时问题定位.md
         </h1>
 
         <div class="post-meta">
@@ -186,14 +184,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2018-11-27 14:58:23" itemprop="dateCreated datePublished" datetime="2018-11-27T14:58:23+08:00">2018-11-27</time>
+              <time title="创建时间：2020-11-26 19:24:14" itemprop="dateCreated datePublished" datetime="2020-11-26T19:24:14+08:00">2020-11-26</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-16 00:34:02" itemprop="dateModified" datetime="2020-11-16T00:34:02+08:00">2020-11-16</time>
+                <time title="修改时间：2020-11-27 08:41:45" itemprop="dateModified" datetime="2020-11-27T08:41:45+08:00">2020-11-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -201,7 +199,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/软件折腾/" itemprop="url" rel="index"><span itemprop="name">软件折腾</span></a>
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
                 </span>
             </span>
 
@@ -221,8 +219,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2018/11/27/zsh-批量修改profiles/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2018/11/27/zsh-批量修改profiles/" itemprop="commentCount"></span>
+    <a title="valine" href="/2020/11/26/记一次线上Okhttp超时问题定位-md/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/26/记一次线上Okhttp超时问题定位-md/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -237,9 +235,32 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>iterm2 支持批量修改profiles，只不过这个功能比较难找到，备个案</p>
-<p>先修改其中一个profile, 然后如下操作:<br>preferences -&gt; profiles -&gt; 选中已经修改的profile -&gt; (左下角) Other Actions -&gt; Bulk copy from Selected Profile -&gt; 勾选你要复制的配置(例如keys) -&gt; 下方选中要批量修改的profiles -&gt; 点击copy即可</p>
-<p><img src="/images/zsh-批量修改profiles/1-5457843.png" alt="点击bulk copy后的页面"></p>
+        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>这几天突然发现线上调三方接口有些超时时间达到了16分钟，我们是通过feign okhttp的方式来调用的，而且设置了feign的okhttp超时时间的。而且我也看到有些请求确实是按照限制的10秒超时的。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">feign:</span></span><br><span class="line"><span class="attr">  okhttp:</span></span><br><span class="line"><span class="attr">    enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  client:</span></span><br><span class="line"><span class="attr">    config:</span></span><br><span class="line"><span class="attr">      default:</span></span><br><span class="line"><span class="attr">        connectTimeout:</span> <span class="number">10000</span></span><br><span class="line"><span class="attr">        readTimeout:</span> <span class="number">10000</span></span><br></pre></td></tr></table></figure>
+<h1 id="排查"><a href="#排查" class="headerlink" title="排查"></a>排查</h1><p>看日志的过程中发现有一个这个16分钟的超时的错误虽然也是socketTimeout，但是它的timeout是在write的时候发生的。而其他正常的超时是在read的时候发生的。</p>
+<p>16分钟超时的日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.net.SocketTimeoutException: timeout at okio.SocketAsyncTimeout.newTimeoutException(Okio.kt:159) at okio.AsyncTimeout.exit$jvm(AsyncTimeout.kt:203) at okio.AsyncTimeout$sink$1.write(AsyncTimeout.kt:110)</span><br></pre></td></tr></table></figure>
+<p>10秒超时的日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.net.SocketTimeoutException: timeout at okio.SocketAsyncTimeout.newTimeoutException(Okio.kt:159) at okio.AsyncTimeout.exit$jvm(AsyncTimeout.kt:203) at okio.AsyncTimeout$source$1.read(AsyncTimeout.kt:163)</span><br></pre></td></tr></table></figure>
+<p>然后接下来我了解了下readTimeout和 connectTimeout的概念，也知道了okhttp原来还有writeTimeout的说法。</p>
+<p>参考：</p>
+<p><a href="https://www.zhihu.com/question/21609463/answer/160100810" target="_blank" rel="noopener">HTTP 在什么情况下会请求超时？ - 严振杰的回答 - 知乎</a></p>
+<p>简单说下okhttp的这几个概念</p>
+<ul>
+<li>connectTimeout：这个比较简单，就是建立连接的超时时间</li>
+<li>readTimeout：从建立连接开发，接收服务端的两个数据包之间的最大等待时间。<ul>
+<li>例如说下载文件的时候，虽然下载很久但是也没有超时。就是因为服务端一直在给你喂数据，没停过。所以不会触发这个读超时</li>
+</ul>
+</li>
+<li>writeTimeout：写超时是从客户端发送数据给服务端的时候，发送两个数据包之间最大的等待时间。</li>
+<li>callTimeout：调用超时，顾名思义，就是整个调用过程的超时时间。包括了上面所有的时间，还有dns域名解析。</li>
+</ul>
+<p>根据上面的日志可以知道，16m的超时的时候我们还在write，发送请求。这就是为什么readTimeout没有生效的原因。因为都还没到read 服务端响应的时候。</p>
+<p>于是我本地测试了下，在上传一个大文件的时候，即使上传的时间已经超过了readTimeout规定的时间，但还是没有触发readTimeout，等到上传完成的时候才触发。</p>
+<p>那我是不是给他设置一个writeTimeout就可以了呢？但debug发现，原来okhttpClient默认就设置了writeTimeout为10秒。那为啥线上还是搞到了16m？注意下writeTimeout的定义，发送两个数据包之间最大的等待时间。那只要我一直在发，那就无法触发这个writeTimeout了。</p>
+<p>于是我又测试了下，还是上传一个大文件，writeTimeout是默认的10秒。结果上传了3分钟还是没有触发write超时，还是一样write完了直接触发readTimeout。然后我将writeTimeout的时间设置到很小，例如10毫秒，结果就发现很快就触发了writeTimeout。跟线上的错误一样的异常日志。说明两个请求数据包之间间隔的时间超过了10毫秒。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>那问题就比较明朗了，就是线上其实一直都在写，只是对方带宽，网络环境等原因，导致发送请求很慢，但是一直在发。可能几秒发几个字节这样。所以没有触发writeTimeout，更不用说readTimeout。直到最后可能快结束了，出现了一些不可名状的原因，导致触发了writeTimeout。。。最后这个解释有点牵强，我也不清楚为什么最后的超时时间都是16分钟。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>通过设置okhttp的 callTimeout可以完美解决这个问题，简单粗暴。我不管你中间发生了什么，反正我一调用我就开始计时，超时了我就关闭io，然后给你返回个 InterruptIOException。</p>
 
     </div>
 
@@ -249,8 +270,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/wiki/" rel="tag"># wiki</a>
-              <a href="/tags/zsh/" rel="tag"># zsh</a>
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/okhttp/" rel="tag"># okhttp</a>
           </div>
 
         
@@ -258,11 +279,11 @@
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2018/11/29/戊戍北马感悟/" rel="next" title="戊戍北马感悟">
-      戊戍北马感悟 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/11/25/java-wiki/" rel="prev" title="java wiki">
+      <i class="fa fa-chevron-left"></i> java wiki
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -322,6 +343,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#排查"><span class="nav-number">2.</span> <span class="nav-text">排查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结论"><span class="nav-number">3.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决方案"><span class="nav-number">4.</span> <span class="nav-text">解决方案</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

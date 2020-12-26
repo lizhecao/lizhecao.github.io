@@ -20,18 +20,20 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="It is never too late to mend">
-<meta property="og:type" content="website">
-<meta property="og:title" content="李哲操的博客">
-<meta property="og:url" content="http://yoursite.com/tags/跑步/index.html">
+  <meta name="description" content="这是什么？很明显，reslience4j-feign就是一个将reslience4j的功能装饰到feign的开源框架。">
+<meta name="keywords" content="源码学习,java,并发,装饰器模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="resilience4j-feign源码分析">
+<meta property="og:url" content="http://yoursite.com/2020/11/25/resilience4j-feign源码分析/index.html">
 <meta property="og:site_name" content="李哲操的博客">
-<meta property="og:description" content="It is never too late to mend">
+<meta property="og:description" content="这是什么？很明显，reslience4j-feign就是一个将reslience4j的功能装饰到feign的开源框架。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-12-26T12:30:47.063Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="李哲操的博客">
-<meta name="twitter:description" content="It is never too late to mend">
+<meta name="twitter:title" content="resilience4j-feign源码分析">
+<meta name="twitter:description" content="这是什么？很明显，reslience4j-feign就是一个将reslience4j的功能装饰到feign的开源框架。">
 
-<link rel="canonical" href="http://yoursite.com/tags/跑步/">
+<link rel="canonical" href="http://yoursite.com/2020/11/25/resilience4j-feign源码分析/">
 
 
 <script id="page-configurations">
@@ -39,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: 跑步 | 李哲操的博客</title>
+  <title>resilience4j-feign源码分析 | 李哲操的博客</title>
   
 
 
@@ -152,57 +154,129 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/25/resilience4j-feign源码分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="李哲操">
+      <meta itemprop="description" content="It is never too late to mend">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李哲操的博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          resilience4j-feign源码分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-25 09:00:48" itemprop="dateCreated datePublished" datetime="2020-11-25T09:00:48+08:00">2020-11-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-26 20:30:47" itemprop="dateModified" datetime="2020-12-26T20:30:47+08:00">2020-12-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">跑步
-          <small>标签</small>
-        </h2>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/11/25/resilience4j-feign源码分析/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/25/resilience4j-feign源码分析/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2018</span>
+        <h1 id="这是什么？"><a href="#这是什么？" class="headerlink" title="这是什么？"></a>这是什么？</h1><p>很明显，reslience4j-feign就是一个将reslience4j的功能装饰到feign的开源框架。</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2018-11-29T15:29:48+08:00"
-              content="2018-11-29">
-          11-29
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/源码学习/" rel="tag"># 源码学习</a>
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/并发/" rel="tag"># 并发</a>
+              <a href="/tags/装饰器模式/" rel="tag"># 装饰器模式</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2018/11/29/戊戍北马感悟/" itemprop="url">
-            <span itemprop="name">戊戍北马感悟</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/11/29/写给刚上大学的弟弟的一封信/" rel="prev" title="写给刚上大学的弟弟的一封信">
+      <i class="fa fa-chevron-left"></i> 写给刚上大学的弟弟的一封信
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/25/开发心得/" rel="next" title="开发心得">
+      开发心得 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
   </article>
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -249,6 +323,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#这是什么？"><span class="nav-number">1.</span> <span class="nav-text">这是什么？</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -2,10 +2,10 @@
 title: feign RequestInterceptor 拦截器统一修改post表单请求体
 date: 2020-12-26 16:05:43
 tags:
-        - 源码学习
-		- java
+	- 源码学习
+	- java
 categories:
-        - java
+	- java
 typora-root-url: ../../source
 ---
 
@@ -69,7 +69,9 @@ post json搞定了，但接下来又出现了一个三方。它的接口是post�
 
 ## 一览源码
 
-那我们就顺着请求来看看feign是怎么post form的吧。（debug模式中在调用feign接口的地方step into）来到了ReflectiveFeign类的 public Object invoke(Object proxy, Method method, Object[] args)方法。继续往下走在return dispatch.get(method).invoke(args);这里继续step into来到了SynchronousMethodHandler类的invoke方法。
+那我们就顺着请求来看看feign是怎么post form的吧。（debug模式中在调用feign接口的地方step into）
+
+首先来到了ReflectiveFeign类的 public Object invoke(Object proxy, Method method, Object[] args)方法。继续往下走在return dispatch.get(method).invoke(args);这里继续step into来到了SynchronousMethodHandler类的invoke方法。
 
 ```java
 public Object invoke(Object[] argv) throws Throwable {
@@ -138,7 +140,7 @@ protected RequestTemplate resolve(Object[] argv,
   }
 ```
 
-# 分析改造
+## 分析改造
 
 从上面的源码中，我们可以看到其实feign就是通过SpringFormEncoder的encode方法，来将template的body替换成需要的表单数据的。那么这么encoder其实也是我们在post form的时候自己配置了@Bean注入的，那么我们同样也可以拿来用啊。
 

@@ -2,9 +2,9 @@
 title: qq空间相册 批量下载 python脚本
 date: 2018-11-29 15:51:48
 tags:
-        - python
-        - 自动化
-        - 工具
+	- python
+	- 自动化
+	- 工具
 categories:
         - 工具开发
 typora-root-url: ../../source

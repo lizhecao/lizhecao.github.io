@@ -28,7 +28,7 @@
 <meta property="og:site_name" content="李哲操的博客">
 <meta property="og:description" content="RequestInterceptor介绍现在很多开发都是用feign来请求三方接口。feign很方便，通过接口的方式来请求三方，有助于我们以面向接口编程，也简化了之前手工创建httpclient等麻烦的流程。但是对于三方接口中需要统一添加签名要怎么办呢？ 莫慌，Feign给我们预留了一个RequestInterceptor接口，它可以在我们的请求发送之前对请求内容（包装成一个RequestTemp">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-12-26T12:42:59.344Z">
+<meta property="og:updated_time" content="2020-12-27T05:52:28.465Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="feign RequestInterceptor 拦截器统一修改post表单请求体">
 <meta name="twitter:description" content="RequestInterceptor介绍现在很多开发都是用feign来请求三方接口。feign很方便，通过接口的方式来请求三方，有助于我们以面向接口编程，也简化了之前手工创建httpclient等麻烦的流程。但是对于三方接口中需要统一添加签名要怎么办呢？ 莫慌，Feign给我们预留了一个RequestInterceptor接口，它可以在我们的请求发送之前对请求内容（包装成一个RequestTemp">
@@ -183,10 +183,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-12-26 16:05:43 / 修改时间：20:42:59" itemprop="dateCreated datePublished" datetime="2020-12-26T16:05:43+08:00">2020-12-26</time>
+              <time title="创建时间：2020-12-26 16:05:43" itemprop="dateCreated datePublished" datetime="2020-12-26T16:05:43+08:00">2020-12-26</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-27 13:52:28" itemprop="dateModified" datetime="2020-12-27T13:52:28+08:00">2020-12-27</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -269,7 +275,10 @@
 </ol>
 </li>
 </ol>
-<h1 id="为什么不直接用aop"><a href="#为什么不直接用aop" class="headerlink" title="为什么不直接用aop"></a>为什么不直接用aop</h1><p>有的同学会说，整那么多事，直接搞个aop不就行。无论是post表单还是json，改造下请求参数就可以了。这里我也想过要试试aop，但是有个需求aop不好满足，就是我还要根据feign的url来修改请求体。通过aop的话，可能不是很好获得这个url。而拦截器通过template可以轻松取到。所以整体来说还是Interceptor功能更强劲些。毕竟是原生的扩展😁</p>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><h2 id="直接用aop？"><a href="#直接用aop？" class="headerlink" title="直接用aop？"></a>直接用aop？</h2><p>有的同学会说，整那么多事，直接搞个aop不就行。无论是post表单还是json，改造下请求参数就可以了。</p>
+<p>确实这里直接用spring aop应该也能实现。有兴趣的同学可以试试。但是还是相对来说没那么直观，毕竟Interceptor是框架原生扩展，直接把参数都封装成RestTemplate给你了。如果用aop，可能要得去获取签名，签名做一些判断等</p>
+<p>感谢以下的博主分享：</p>
+<p><a href="https://www.javacodemonk.com/feign-requestinterceptor-in-spring-boot-cbe5d967" target="_blank" rel="noopener">Feign RequestInterceptor in Spring Boot</a></p>
 
     </div>
 
@@ -355,7 +364,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RequestInterceptor介绍"><span class="nav-number">1.</span> <span class="nav-text">RequestInterceptor介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拦截并修改post-json请求体"><span class="nav-number">2.</span> <span class="nav-text">拦截并修改post json请求体</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拦截并修改post-form请求体"><span class="nav-number">3.</span> <span class="nav-text">拦截并修改post form请求体</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一览源码"><span class="nav-number">3.1.</span> <span class="nav-text">一览源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析改造"><span class="nav-number">3.2.</span> <span class="nav-text">分析改造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么不直接用aop"><span class="nav-number">4.</span> <span class="nav-text">为什么不直接用aop</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RequestInterceptor介绍"><span class="nav-number">1.</span> <span class="nav-text">RequestInterceptor介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拦截并修改post-json请求体"><span class="nav-number">2.</span> <span class="nav-text">拦截并修改post json请求体</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#拦截并修改post-form请求体"><span class="nav-number">3.</span> <span class="nav-text">拦截并修改post form请求体</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一览源码"><span class="nav-number">3.1.</span> <span class="nav-text">一览源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析改造"><span class="nav-number">3.2.</span> <span class="nav-text">分析改造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#扩展"><span class="nav-number">4.</span> <span class="nav-text">扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#直接用aop？"><span class="nav-number">4.1.</span> <span class="nav-text">直接用aop？</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

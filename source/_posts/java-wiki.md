@@ -6,7 +6,7 @@ tags:
 	- wiki
 	- maven
 categories:
-        - wiki
+	- wiki
 comments: true
 typora-root-url: ../../source
 ---

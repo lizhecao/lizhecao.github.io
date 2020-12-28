@@ -244,7 +244,17 @@ public class FeignFormInterceptor implements RequestInterceptor {
 
 
 
-# 为什么不直接用aop
+# 扩展
 
-有的同学会说，整那么多事，直接搞个aop不就行。无论是post表单还是json，改造下请求参数就可以了。这里我也想过要试试aop，但是有个需求aop不好满足，就是我还要根据feign的url来修改请求体。通过aop的话，可能不是很好获得这个url。而拦截器通过template可以轻松取到。所以整体来说还是Interceptor功能更强劲些。毕竟是原生的扩展😁
+## 直接用aop？
+
+有的同学会说，整那么多事，直接搞个aop不就行。无论是post表单还是json，改造下请求参数就可以了。
+
+确实这里直接用spring aop应该也能实现。有兴趣的同学可以试试。但是还是相对来说没那么直观，毕竟Interceptor是框架原生扩展，直接把参数都封装成RestTemplate给你了。如果用aop，可能要得去获取签名，签名做一些判断等
+
+
+
+感谢以下的博主分享：
+
+[Feign RequestInterceptor in Spring Boot](https://www.javacodemonk.com/feign-requestinterceptor-in-spring-boot-cbe5d967)
 

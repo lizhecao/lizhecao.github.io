@@ -6,7 +6,7 @@ tags:
 	- 自动化
 	- 工具
 categories:
-        - 工具开发
+    - 工具开发
 typora-root-url: ../../source
 ---
 

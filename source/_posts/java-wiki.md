@@ -1,5 +1,5 @@
 ---
-title: java wiki
+title: java 踩坑记录
 date: 2020-11-25 12:40:43
 tags: 
 	- java
@@ -9,6 +9,7 @@ categories:
 	- wiki
 comments: true
 typora-root-url: ../../source
+description: 记录java开发过程中遇到的技术细节、坑坑洼洼
 ---
 
 # maven

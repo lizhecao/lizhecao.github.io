@@ -13,7 +13,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: https://lizhecao.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -27,7 +27,7 @@ category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
-	- 'js/av-core-mini-0.6.4.js'
+  - 'js/av-core-mini-0.6.4.js'
 
 # Writing
 new_post_name: :title.md # File name of new posts
@@ -96,3 +96,11 @@ search:
   field: post
   format: html
   limit: 10000
+
+# hexo sitemap网站地图
+sitemap:
+  path: sitemap.xml
+
+baidusitemap:
+  path: baidusitemap.xml
+

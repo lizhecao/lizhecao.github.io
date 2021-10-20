@@ -1,0 +1,15 @@
+name: AutoIssue
+on:
+  push:
+    branches: [master]
+  schedule:
+    - cron: '0 0 * * *' # run at 00:00 UTC
+
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v2
+      - run: bash createIssues.sh

@@ -74,7 +74,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: maupassant
+theme: cactus
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -104,3 +104,9 @@ sitemap:
 baidusitemap:
   path: baidusitemap.xml
 
+theme_config:
+  colorscheme: light
+
+posts_overview:
+  show_all_posts: false
+  post_count: 10

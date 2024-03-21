@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="开发要学会保护好自己。加班熬夜的时候可没有人陪着你。所以像这种要涉及到加班发布的方案一定要自己好好设计。可以不深夜搞一定要尽量不晚上搞。要深夜搞的一定要再三确认好各种细节。提前做好准备，确保深夜的时候需要的工作量很小很快。需要长时间的要确保程序自动化。 看源码之前一定要先好好了解这个框架&#x2F;应用 的主要功能，怎么使用，有哪些扩展点。有个大概的了解之后再来看代码就舒服多了 例如spring源码。我以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开发心得">
+<meta property="og:url" content="https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/index.html">
+<meta property="og:site_name" content="李哲操的博客">
+<meta property="og:description" content="开发要学会保护好自己。加班熬夜的时候可没有人陪着你。所以像这种要涉及到加班发布的方案一定要自己好好设计。可以不深夜搞一定要尽量不晚上搞。要深夜搞的一定要再三确认好各种细节。提前做好准备，确保深夜的时候需要的工作量很小很快。需要长时间的要确保程序自动化。 看源码之前一定要先好好了解这个框架&#x2F;应用 的主要功能，怎么使用，有哪些扩展点。有个大概的了解之后再来看代码就舒服多了 例如spring源码。我以">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-11-25T04:38:35.000Z">
+<meta property="article:modified_time" content="2024-03-06T07:28:29.659Z">
+<meta property="article:author" content="李哲操">
+<meta property="article:tag" content="思考">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>开发心得</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="李哲操的博客" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2020/11/25/java-wiki/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2018/11/29/%E5%86%99%E7%BB%99%E5%88%9A%E4%B8%8A%E5%A4%A7%E5%AD%A6%E7%9A%84%E5%BC%9F%E5%BC%9F%E7%9A%84%E4%B8%80%E5%B0%81%E4%BF%A1/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&text=开发心得"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&title=开发心得"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&is_video=false&description=开发心得"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=开发心得&body=Check out this article: https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&title=开发心得"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&title=开发心得"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&title=开发心得"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&title=开发心得"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&name=开发心得&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&t=开发心得"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        开发心得
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">李哲操</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-11-25T04:38:35.000Z" class="dt-published" itemprop="datePublished">2020-11-25</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E6%8A%80%E6%9C%AF%E4%BA%BA%E7%94%9F/">技术人生</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E6%80%9D%E8%80%83/" rel="tag">思考</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <ul>
+<li>开发要学会保护好自己。加班熬夜的时候可没有人陪着你。所以像这种要涉及到加班发布的方案一定要自己好好设计。可以不深夜搞一定要尽量不晚上搞。要深夜搞的一定要再三确认好各种细节。提前做好准备，确保深夜的时候需要的工作量很小很快。需要长时间的要确保程序自动化。</li>
+<li>看源码之前一定要先好好了解这个框架/应用 的主要功能，怎么使用，有哪些扩展点。有个大概的了解之后再来看代码就舒服多了<ul>
+<li>例如spring源码。我以前对spring只是停留在简单地用一下。大部分功能都不了解，那时候去看源码真的是一脸懵逼。在看了spring实战和spring揭秘后，特别是spring揭秘。我就了解了bean的生命周期，spring它在bean的创建过程中提供了很多扩展点。知道了beanFactory也有一些扩展点。知道了spring其实做的就是从xml读取配置，然后将配置解析成beanDefinition，然后再在getBean的时候从缓存或者直接用beanDefinition来创建bean。诸如此类的。那么，当我再来看源码的时候。诶，我就发现，源码好像在跟着我的想法走。我知道在createBean实例之后，为什么要调用aware的set方法了，为什么要调用beanPostProcessor的相关方法了等等。</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&text=开发心得"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&title=开发心得"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&is_video=false&description=开发心得"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=开发心得&body=Check out this article: https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&title=开发心得"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&title=开发心得"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&title=开发心得"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&title=开发心得"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&name=开发心得&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lizhecao.github.io/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/&t=开发心得"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    李哲操
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

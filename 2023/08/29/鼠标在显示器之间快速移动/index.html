@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="whymac多显示器的情况下，由于习惯用spotlight(alfred) 之类的软件切换应用，导致经常出现的情况下，我跳转（激活）到了另一个显示器上的一个应用，但是鼠标还停留在原显示器上，我想点一下，还得再移动下鼠标过来。多屏幕操作的时候的鼠标移动又挺浪费时间的。 How在网上搜索后发现了一个很好用的方法，参考：How to quickly move mouse cursor between m">
+<meta property="og:type" content="article">
+<meta property="og:title" content="鼠标在显示器之间快速移动">
+<meta property="og:url" content="https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/index.html">
+<meta property="og:site_name" content="李哲操的博客">
+<meta property="og:description" content="whymac多显示器的情况下，由于习惯用spotlight(alfred) 之类的软件切换应用，导致经常出现的情况下，我跳转（激活）到了另一个显示器上的一个应用，但是鼠标还停留在原显示器上，我想点一下，还得再移动下鼠标过来。多屏幕操作的时候的鼠标移动又挺浪费时间的。 How在网上搜索后发现了一个很好用的方法，参考：How to quickly move mouse cursor between m">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-08-29T07:04:20.000Z">
+<meta property="article:modified_time" content="2024-03-06T07:28:29.659Z">
+<meta property="article:author" content="李哲操">
+<meta property="article:tag" content="hammerspoon">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>鼠标在显示器之间快速移动</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="李哲操的博客" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/04/27/protobuf%E8%BD%ACjava%20bean%E7%9A%84%E5%9D%91/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&text=鼠标在显示器之间快速移动"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&title=鼠标在显示器之间快速移动"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&is_video=false&description=鼠标在显示器之间快速移动"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=鼠标在显示器之间快速移动&body=Check out this article: https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&title=鼠标在显示器之间快速移动"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&title=鼠标在显示器之间快速移动"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&title=鼠标在显示器之间快速移动"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&title=鼠标在显示器之间快速移动"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&name=鼠标在显示器之间快速移动&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&t=鼠标在显示器之间快速移动"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#why"><span class="toc-number">1.</span> <span class="toc-text">why</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#How"><span class="toc-number">2.</span> <span class="toc-text">How</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96"><span class="toc-number">2.1.</span> <span class="toc-text">优化</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        鼠标在显示器之间快速移动
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">李哲操</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-08-29T07:04:20.000Z" class="dt-published" itemprop="datePublished">2023-08-29</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E8%BD%AF%E4%BB%B6%E6%8A%98%E8%85%BE/">软件折腾</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/hammerspoon/" rel="tag">hammerspoon</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="why"><a href="#why" class="headerlink" title="why"></a>why</h1><p>mac多显示器的情况下，由于习惯用spotlight(alfred) 之类的软件切换应用，导致经常出现的情况下，我跳转（激活）到了另一个显示器上的一个应用，但是鼠标还停留在原显示器上，我想点一下，还得再移动下鼠标过来。多屏幕操作的时候的鼠标移动又挺浪费时间的。</p>
+<h1 id="How"><a href="#How" class="headerlink" title="How"></a>How</h1><p>在网上搜索后发现了一个很好用的方法，参考：<a target="_blank" rel="noopener" href="https://apple.stackexchange.com/questions/268697/how-to-quickly-move-mouse-cursor-between-monitors#">How to quickly move mouse cursor between monitors</a> 下面ipatch的回答。</p>
+<p>方法如下</p>
+<ol>
+<li>下载 <a target="_blank" rel="noopener" href="http://www.hammerspoon.org/">hammerspoon</a></li>
+<li>下载它的插件 spoon <a target="_blank" rel="noopener" href="https://www.hammerspoon.org/Spoons/MouseFollowsFocus.html">MouseFollowsFocus</a>（如果觉得不适应的可以下载我的脚本，做了一些优化<a target="_blank" rel="noopener" href="https://github.com/lizhecao/databases/blob/main/mac/hammerspoon/MouseFollowsFocus.spoon/init.lua">MyMouseFollowsFocus</a> ）</li>
+<li>vim ~/.hammerspoon/init.lua</li>
+</ol>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mouse_follows_focus = hs.loadSpoon(<span class="string">&quot;MouseFollowsFocus&quot;</span>)</span><br><span class="line">mouse_follows_focus:configure(&#123;&#125;)</span><br><span class="line">mouse_follows_focus:start()</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><blockquote>
+<p>默认的脚本存在一些对我使用体验较差的问题，所以我做了一些优化</p>
+</blockquote>
+<p>不想看原理的可以直接下载我的脚本即可：<a target="_blank" rel="noopener" href="https://github.com/lizhecao/databases/blob/main/mac/hammerspoon/MouseFollowsFocus.spoon/init.lua">MyMouseFollowsFocus</a><br>如果需要定制化，可以在修改脚本后，重新加载就可以了。脚本默认加载后的位置在~/.hammerspoon/Spoons/MouseFollowsFocus.spoon/init.lua</p>
+<ol>
+<li>xnip截图软件会自动激活所有桌面，导致鼠标重复跳转。</li>
+</ol>
+<p>解决方法：直接禁用掉xnip</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if hs.application.frontmostApplication():name() ~= &quot;Xnip Helper&quot; then</span><br><span class="line">  self:updateMouse(window)</span><br><span class="line">else</span><br><span class="line">  print(&quot;xnip app running&quot;)</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>同个显示器下鼠标也自动跳转了。这个很困扰我，因为同个显示器下移动有点错愕感，而且也没什么必要。因为距离很小了</p>
+<p>解决方法：不同显示器下才跳转。判断的位置由应用变成显示器。</p>
+</li>
+</ol>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#why"><span class="toc-number">1.</span> <span class="toc-text">why</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#How"><span class="toc-number">2.</span> <span class="toc-text">How</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8C%96"><span class="toc-number">2.1.</span> <span class="toc-text">优化</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&text=鼠标在显示器之间快速移动"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&title=鼠标在显示器之间快速移动"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&is_video=false&description=鼠标在显示器之间快速移动"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=鼠标在显示器之间快速移动&body=Check out this article: https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&title=鼠标在显示器之间快速移动"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&title=鼠标在显示器之间快速移动"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&title=鼠标在显示器之间快速移动"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&title=鼠标在显示器之间快速移动"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&name=鼠标在显示器之间快速移动&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/&t=鼠标在显示器之间快速移动"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    李哲操
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

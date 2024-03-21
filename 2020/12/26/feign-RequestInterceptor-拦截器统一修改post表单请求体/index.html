@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="RequestInterceptor介绍现在很多开发都是用feign来请求三方接口。feign很方便，通过接口的方式来请求三方，有助于我们以面向接口编程，也简化了之前手工创建httpclient等麻烦的流程。但是对于三方接口中需要统一添加签名要怎么办呢？ 莫慌，Feign给我们预留了一个RequestInterceptor接口，它可以在我们的请求发送之前对请求内容（包装成一个RequestTemp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="feign RequestInterceptor 拦截器统一修改post表单请求体">
+<meta property="og:url" content="https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/index.html">
+<meta property="og:site_name" content="李哲操的博客">
+<meta property="og:description" content="RequestInterceptor介绍现在很多开发都是用feign来请求三方接口。feign很方便，通过接口的方式来请求三方，有助于我们以面向接口编程，也简化了之前手工创建httpclient等麻烦的流程。但是对于三方接口中需要统一添加签名要怎么办呢？ 莫慌，Feign给我们预留了一个RequestInterceptor接口，它可以在我们的请求发送之前对请求内容（包装成一个RequestTemp">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-26T08:05:43.000Z">
+<meta property="article:modified_time" content="2024-03-06T07:28:29.658Z">
+<meta property="article:author" content="李哲操">
+<meta property="article:tag" content="源码学习">
+<meta property="article:tag" content="java">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>feign RequestInterceptor 拦截器统一修改post表单请求体</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="李哲操的博客" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="上一篇" href="/2021/10/13/npm%20hexo-renderer-sass%E5%AE%89%E8%A3%85%E6%8A%A5%E9%94%99/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2020/11/26/%E8%AE%B0%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8AOkhttp%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&text=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&title=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&is_video=false&description=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=feign RequestInterceptor 拦截器统一修改post表单请求体&body=Check out this article: https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&title=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&title=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&title=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&title=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&name=feign RequestInterceptor 拦截器统一修改post表单请求体&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&t=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RequestInterceptor%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">RequestInterceptor介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8B%A6%E6%88%AA%E5%B9%B6%E4%BF%AE%E6%94%B9post-json%E8%AF%B7%E6%B1%82%E4%BD%93"><span class="toc-number">2.</span> <span class="toc-text">拦截并修改post json请求体</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8B%A6%E6%88%AA%E5%B9%B6%E4%BF%AE%E6%94%B9post-form%E8%AF%B7%E6%B1%82%E4%BD%93"><span class="toc-number">3.</span> <span class="toc-text">拦截并修改post form请求体</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E8%A7%88%E6%BA%90%E7%A0%81"><span class="toc-number">3.1.</span> <span class="toc-text">一览源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E6%94%B9%E9%80%A0"><span class="toc-number">3.2.</span> <span class="toc-text">分析改造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.3.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%A9%E5%B1%95"><span class="toc-number">4.</span> <span class="toc-text">扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E7%94%A8aop%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">直接用aop？</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        feign RequestInterceptor 拦截器统一修改post表单请求体
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">李哲操</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-12-26T08:05:43.000Z" class="dt-published" itemprop="datePublished">2020-12-26</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/java/">java</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/java/" rel="tag">java</a>, <a class="p-category" href="/tags/%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0/" rel="tag">源码学习</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h1 id="RequestInterceptor介绍"><a href="#RequestInterceptor介绍" class="headerlink" title="RequestInterceptor介绍"></a>RequestInterceptor介绍</h1><p>现在很多开发都是用feign来请求三方接口。feign很方便，通过接口的方式来请求三方，有助于我们以面向接口编程，也简化了之前手工创建httpclient等麻烦的流程。但是对于三方接口中需要统一添加签名要怎么办呢？</p>
+<p>莫慌，Feign给我们预留了一个RequestInterceptor接口，它可以在我们的请求发送之前对请求内容（包装成一个RequestTemplate）做统一的处理。那我们就可以在这里对请求参数做一些统一处理了</p>
+<h1 id="拦截并修改post-json请求体"><a href="#拦截并修改post-json请求体" class="headerlink" title="拦截并修改post json请求体"></a>拦截并修改post json请求体</h1><p>我们有一个三方的接口是post json的，并且有统一的参数如下</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;appId&quot;</span><span class="punctuation">:</span> xxx<span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;sign&quot;</span><span class="punctuation">:</span> xxx<span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;timestampe&quot;</span><span class="punctuation">:</span> xxx<span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;data&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;a&quot;</span><span class="punctuation">:</span> xxx<span class="punctuation">&#125;</span> <span class="comment">//真正的数据以json格式放在data中</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>那我们声明的feign接口，使用的时候不可能每次都去构造这些通用的参数，应该只需要传变化的东西进来就好了。例如上面的{“a”: xxx}。那么不变的部分在哪里添加呢？答案就是我们的RequestInterceptor</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FeignInterceptor</span> <span class="keyword">implements</span> <span class="title class_">RequestInterceptor</span> &#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">apply</span><span class="params">(RequestTemplate template)</span> &#123;</span><br><span class="line">    <span class="comment">// 通过template获取到请求体（已经被转成json）</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">jsonBody</span> <span class="operator">=</span> template.requestBody().asString();</span><br><span class="line">    <span class="comment">// 构造通用的请求体</span></span><br><span class="line">    <span class="type">BaseReq</span> <span class="variable">baseReq</span> <span class="operator">=</span> translateToBaseReq(jsonBody);</span><br><span class="line">    <span class="comment">// 替换请求体</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">baseReqStr</span> <span class="operator">=</span> JSON.toJSONString(baseReq);</span><br><span class="line">    template.body(baseReqStr);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在我们需要的Feign接口的注解中配置configuration，标明使用这个拦截器配置就可以了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient(name = &quot;hello&quot;, url = &quot;hello&quot;, configuration = FeignInterceptor.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">HelloFeign</span> &#123;</span><br><span class="line">  <span class="meta">@PostMapping(&quot;test&quot;)</span></span><br><span class="line">  <span class="keyword">void</span> <span class="title function_">test</span><span class="params">(<span class="meta">@RequestBody</span> ConcreteData data)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样就ok了，是不是很简单，然后我们的接口参数中只需要写实际要传的具体数据的类就行了。</p>
+<h1 id="拦截并修改post-form请求体"><a href="#拦截并修改post-form请求体" class="headerlink" title="拦截并修改post form请求体"></a>拦截并修改post form请求体</h1><p>post json搞定了，但接下来又出现了一个三方。它的接口是post表单形式的。有同学说，post表单我会。</p>
+<p>网上也有很多这方面的教程，例如：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/08a5dd04093e">2018-06-19 SpringCloud Feign Post表单请求</a>，但是关键是post表单了之后，怎么处理统一的请求体呢？很明显，像上面直接通过template.body方式替换是不行的，这样请求体就是json字符串了。而form格式是a=xxx&amp;b=xxx这样的。那有同学就说，我自己这样构造不就可以了？可以是可以，但是这就是在重复造轮子了。feign既然能发送post form的请求，说明它已经实现过了。那我们是不是可以借鉴下呢？</p>
+<h2 id="一览源码"><a href="#一览源码" class="headerlink" title="一览源码"></a>一览源码</h2><p>那我们就顺着请求来看看feign是怎么post form的吧。（debug模式中在调用feign接口的地方step into）</p>
+<p>首先来到了ReflectiveFeign类的 public Object invoke(Object proxy, Method method, Object[] args)方法。继续往下走在return dispatch.get(method).invoke(args);这里继续step into来到了SynchronousMethodHandler类的invoke方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object[] argv)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">  <span class="comment">//这里将参数构造成了最终的RequestTemplate，我们从这里进去看看</span></span><br><span class="line">    <span class="type">RequestTemplate</span> <span class="variable">template</span> <span class="operator">=</span> buildTemplateFromArgs.create(argv);</span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">   <span class="keyword">public</span> RequestTemplate <span class="title function_">create</span><span class="params">(Object[] argv)</span> &#123;</span><br><span class="line">     <span class="comment">// 通过元数据初始化了一个RequestTemplate（不包含请求体）</span></span><br><span class="line">     <span class="type">RequestTemplate</span> <span class="variable">mutable</span> <span class="operator">=</span> RequestTemplate.from(metadata.template());</span><br><span class="line">     ......</span><br><span class="line"> 		<span class="comment">// 这里才是生成最后的template的地方，继续进去</span></span><br><span class="line">     <span class="type">RequestTemplate</span> <span class="variable">template</span> <span class="operator">=</span> resolve(argv, mutable, varBuilder);</span><br><span class="line">     ......</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> RequestTemplate <span class="title function_">resolve</span><span class="params">(Object[] argv,</span></span><br><span class="line"><span class="params">                                      RequestTemplate mutable,</span></span><br><span class="line"><span class="params">                                      Map&lt;String, Object&gt; variables)</span> &#123;</span><br><span class="line">   			......</span><br><span class="line">        <span class="comment">// 在这里对template的body进行了组装</span></span><br><span class="line">        encoder.encode(formVariables, Encoder.MAP_STRING_WILDCARD, mutable);</span><br><span class="line">     		......</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>从这里encode方法就会调用SpringFormEncoder的encode方法，然后就会到FormEncoder的encode，最后调用到UrlencodedFormContentProcessor的process方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">process</span> <span class="params">(RequestTemplate template, Charset charset, Map&lt;String, Object&gt; data)</span> <span class="keyword">throws</span> EncodeException &#123;</span><br><span class="line">    <span class="type">val</span> <span class="variable">bodyData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">    <span class="comment">// 这里对请求体中的参数进行处理（Map&lt;String,?&gt;）</span></span><br><span class="line">    <span class="keyword">for</span> (Entry&lt;String, Object&gt; entry : data.entrySet()) &#123;</span><br><span class="line">      <span class="keyword">if</span> (entry == <span class="literal">null</span> || entry.getKey() == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 参数之间用&amp;连接</span></span><br><span class="line">      <span class="keyword">if</span> (bodyData.length() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        bodyData.append(QUERY_DELIMITER);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 参数key value之间用=号连接</span></span><br><span class="line">      bodyData.append(createKeyValuePair(entry, charset));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造application/x-www-form-urlencoded的请求头和charset</span></span><br><span class="line">    <span class="type">val</span> <span class="variable">contentTypeValue</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>()</span><br><span class="line">        .append(getSupportedContentType().getHeader())</span><br><span class="line">        .append(<span class="string">&quot;; charset=&quot;</span>).append(charset.name())</span><br><span class="line">        .toString();</span><br><span class="line"></span><br><span class="line">    <span class="type">val</span> <span class="variable">bytes</span> <span class="operator">=</span> bodyData.toString().getBytes(charset);</span><br><span class="line">    <span class="type">val</span> <span class="variable">body</span> <span class="operator">=</span> Request.Body.encoded(bytes, charset);</span><br><span class="line">		<span class="comment">// 清空原来的header，然后设置新的header以及替换上面的body</span></span><br><span class="line">    template.header(CONTENT_TYPE_HEADER, Collections.&lt;String&gt;emptyList()); <span class="comment">// reset header</span></span><br><span class="line">    template.header(CONTENT_TYPE_HEADER, contentTypeValue);</span><br><span class="line">    template.body(body);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="分析改造"><a href="#分析改造" class="headerlink" title="分析改造"></a>分析改造</h2><p>从上面的源码中，我们可以看到其实feign就是通过SpringFormEncoder的encode方法，来将template的body替换成需要的表单数据的。那么这么encoder其实也是我们在post form的时候自己配置了@Bean注入的，那么我们同样也可以拿来用啊。</p>
+<p>于是开始改造原来的Interceptor。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FeignFormInterceptor</span> <span class="keyword">implements</span> <span class="title class_">RequestInterceptor</span> &#123;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  SpringFormEncoder encoder;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">apply</span><span class="params">(RequestTemplate template)</span> &#123;</span><br><span class="line">    <span class="comment">// 通过template获取到请求体（已经被转成json）</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">jsonBody</span> <span class="operator">=</span> template.requestBody().asString();</span><br><span class="line">    <span class="comment">// 构造通用的请求体</span></span><br><span class="line">    <span class="type">BaseReq</span> <span class="variable">baseReq</span> <span class="operator">=</span> translateToBaseReq(jsonBody);</span><br><span class="line">    <span class="comment">// 通过encoder的encode方法，将我们的数据 改成表单数据，并替换掉原来的template中的body</span></span><br><span class="line">    encoder.encode(baseReq, Encoder.MAP_STRING_WILDCARD, template);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient(name = &quot;hello&quot;, url = &quot;hello&quot;, configuration = FeignFormInterceptor.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">HelloFeign</span> &#123;</span><br><span class="line">  <span class="meta">@PostMapping(value = &quot;testForm&quot;, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)</span></span><br><span class="line">  <span class="keyword">void</span> <span class="title function_">testForm</span><span class="params">(<span class="meta">@RequestBody</span> ConcreteData data)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>看起来似乎ok了？nonono，还是出问题了。因为我们取出来的原来的body中的数据（通过template.requestBody().asString()）不是json字符串。因为我们的feign接口定义的是post表单的，所以请求参数就被改造成a=xxx&amp;b=xxx的形式了。所以这样就导致我们取出来的不是json串，那这样我们实际发送的data，也就是baseReq中的data的数据就是a=xxx&amp;b=xxx，但实际我们要求的是json形式的。</p>
+<p>那这可咋办？看起来似乎只能够改造这个数据成json格式了。但这样未免稍嫌麻烦，而且也不知道中间有什么坑没有。我们不是想获得json串吗？那我接口还是定义成post json的不就可以了吗？机智</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient(name = &quot;hello&quot;, url = &quot;hello&quot;, configuration = FeignFormInterceptor.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">HelloFeign</span> &#123;</span><br><span class="line">  <span class="meta">@PostMapping(value = &quot;testForm&quot;)</span></span><br><span class="line">  <span class="keyword">void</span> <span class="title function_">testForm</span><span class="params">(<span class="meta">@RequestBody</span> ConcreteData data)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是这样的话，请求三方的header就又变成application/json的，并且数据也是json格式的。有人会说，不是encode里面会将header改造成application/x-www-form-urlencoded的吗？但那是在我们设置了consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE才会进入到最后的process方法。看下这个FormCoder的encode方法就知道了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">  <span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">encode</span> <span class="params">(Object object, Type bodyType, RequestTemplate template)</span> <span class="keyword">throws</span> EncodeException &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">contentTypeValue</span> <span class="operator">=</span> getContentTypeValue(template.headers());</span><br><span class="line">    <span class="comment">// 这里获取了我们设置的header类型，也就是默认的application/json</span></span><br><span class="line">    <span class="type">val</span> <span class="variable">contentType</span> <span class="operator">=</span> ContentType.of(contentTypeValue);</span><br><span class="line">    <span class="comment">// 没有处理这个contentType的processors，就直接返回了。</span></span><br><span class="line">    <span class="keyword">if</span> (!processors.containsKey(contentType)) &#123;</span><br><span class="line">      delegate.encode(object, bodyType, template);</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ......</span><br><span class="line">    <span class="type">val</span> <span class="variable">charset</span> <span class="operator">=</span> getCharset(contentTypeValue);</span><br><span class="line">    <span class="comment">// 而我们之前设置consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE的时候就会到这里，然后调用到UrlencodedFormContentProcessor的process方法。那里才能改造header</span></span><br><span class="line">    processors.get(contentType).process(template, charset, data);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>知道了原理后，那其实我们只要在进入这个encode方法之前，将我们的header改成application/x-www-form-urlencoded不就可以了吗？于是乎</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FeignFormInterceptor</span> <span class="keyword">implements</span> <span class="title class_">RequestInterceptor</span> &#123;</span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  SpringFormEncoder encoder;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">apply</span><span class="params">(RequestTemplate template)</span> &#123;</span><br><span class="line">    <span class="comment">// 通过template获取到请求体（已经被转成json）</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">jsonBody</span> <span class="operator">=</span> template.requestBody().asString();</span><br><span class="line">    <span class="comment">// 构造通用的请求体</span></span><br><span class="line">    <span class="type">BaseReq</span> <span class="variable">baseReq</span> <span class="operator">=</span> translateToBaseReq(jsonBody);</span><br><span class="line">    <span class="comment">// 先改造下header成表单头，magic就出现了哈</span></span><br><span class="line">    template.header(CONTENT_TYPE_HEADER, Collections.&lt;String&gt;emptyList()); <span class="comment">// reset header</span></span><br><span class="line">    template.header(CONTENT_TYPE_HEADER, URLENCODED.getHeader());</span><br><span class="line">    <span class="comment">// 通过encoder的encode方法，将我们的数据 改成表单数据，并替换掉原来的template中的body</span></span><br><span class="line">    encoder.encode(baseReq, Encoder.MAP_STRING_WILDCARD, template);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到此，重要成功地拦截了feign的post表单请求，并统一加上了公用参数、签名等。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>啪啪一通，总结下最后的解决方案吧。</p>
+<ol>
+<li>还是按照正常的post json的方式去写feign接口</li>
+<li>在Interceptor中<ol>
+<li>获取到json串并改造成最后的请求对象</li>
+<li>修改header为application/x-www-form-urlencoded</li>
+<li>通过springEncoder的encode方法构造最终的表单请求体，并替换掉template中的（SpringFormEncoder还是要我们自己注入到容器的，在feign的post表单教程中都会提到）</li>
+</ol>
+</li>
+</ol>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><h2 id="直接用aop？"><a href="#直接用aop？" class="headerlink" title="直接用aop？"></a>直接用aop？</h2><p>有的同学会说，整那么多事，直接搞个aop不就行。无论是post表单还是json，改造下请求参数就可以了。</p>
+<p>确实这里直接用spring aop应该也能实现。有兴趣的同学可以试试。但是还是相对来说没那么直观，毕竟Interceptor是框架原生扩展，直接把参数都封装成RestTemplate给你了。如果用aop，可能要得去获取签名，签名做一些判断等</p>
+<p>感谢以下的博主分享：</p>
+<p><a target="_blank" rel="noopener" href="https://www.javacodemonk.com/feign-requestinterceptor-in-spring-boot-cbe5d967">Feign RequestInterceptor in Spring Boot</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RequestInterceptor%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">RequestInterceptor介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8B%A6%E6%88%AA%E5%B9%B6%E4%BF%AE%E6%94%B9post-json%E8%AF%B7%E6%B1%82%E4%BD%93"><span class="toc-number">2.</span> <span class="toc-text">拦截并修改post json请求体</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8B%A6%E6%88%AA%E5%B9%B6%E4%BF%AE%E6%94%B9post-form%E8%AF%B7%E6%B1%82%E4%BD%93"><span class="toc-number">3.</span> <span class="toc-text">拦截并修改post form请求体</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E8%A7%88%E6%BA%90%E7%A0%81"><span class="toc-number">3.1.</span> <span class="toc-text">一览源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E6%94%B9%E9%80%A0"><span class="toc-number">3.2.</span> <span class="toc-text">分析改造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.3.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%A9%E5%B1%95"><span class="toc-number">4.</span> <span class="toc-text">扩展</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E7%94%A8aop%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">直接用aop？</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&text=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&title=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&is_video=false&description=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=feign RequestInterceptor 拦截器统一修改post表单请求体&body=Check out this article: https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&title=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&title=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&title=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&title=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&name=feign RequestInterceptor 拦截器统一修改post表单请求体&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lizhecao.github.io/2020/12/26/feign-RequestInterceptor-%E6%8B%A6%E6%88%AA%E5%99%A8%E7%BB%9F%E4%B8%80%E4%BF%AE%E6%94%B9post%E8%A1%A8%E5%8D%95%E8%AF%B7%E6%B1%82%E4%BD%93/&t=feign RequestInterceptor 拦截器统一修改post表单请求体"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    李哲操
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="最近因为自建vaultwarden密码管理器, 遇到了一个棘手的问题。 由于trojan需要运行在443端口（因为要伪装成正常流量），所以导致和vaultwarden或者其他网站产生了端口冲突。网上搜索下来，发现文章都讲得不是很细，踩了很多坑，所以这里详细记录下步骤。  参考: Trojan 共用 443 端口方案 | 程小白  具体原来上面这个引用文章已经介绍的很清晰了，我这里不再赘述，只讲最关">
+<meta property="og:type" content="article">
+<meta property="og:title" content="trojan多网站共存(共用443端口)">
+<meta property="og:url" content="https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/index.html">
+<meta property="og:site_name" content="李哲操的博客">
+<meta property="og:description" content="最近因为自建vaultwarden密码管理器, 遇到了一个棘手的问题。 由于trojan需要运行在443端口（因为要伪装成正常流量），所以导致和vaultwarden或者其他网站产生了端口冲突。网上搜索下来，发现文章都讲得不是很细，踩了很多坑，所以这里详细记录下步骤。  参考: Trojan 共用 443 端口方案 | 程小白  具体原来上面这个引用文章已经介绍的很清晰了，我这里不再赘述，只讲最关">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-06T08:24:14.000Z">
+<meta property="article:modified_time" content="2024-03-06T08:23:43.220Z">
+<meta property="article:author" content="李哲操">
+<meta property="article:tag" content="trojan">
+<meta property="article:tag" content="nginx">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>trojan多网站共存(共用443端口)</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.2"><link rel="alternate" href="/atom.xml" title="李哲操的博客" type="application/atom+xml">
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="目录"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="顶部" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="下一篇" href="/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="返回顶部" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="分享文章" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&text=trojan多网站共存(共用443端口)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&title=trojan多网站共存(共用443端口)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&is_video=false&description=trojan多网站共存(共用443端口)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=trojan多网站共存(共用443端口)&body=Check out this article: https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&title=trojan多网站共存(共用443端口)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&title=trojan多网站共存(共用443端口)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&title=trojan多网站共存(共用443端口)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&title=trojan多网站共存(共用443端口)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&name=trojan多网站共存(共用443端口)&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&t=trojan多网站共存(共用443端口)"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%A1%88%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">具体案例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">2.1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E9%85%8D%E7%BD%AE"><span class="toc-number">2.2.</span> <span class="toc-text">具体配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.3.</span> <span class="toc-text">遇到的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Permission-denied-while-reading-upstream"><span class="toc-number">2.3.1.</span> <span class="toc-text">Permission denied while reading upstream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unknown-directive-%E2%80%9Cstream%E2%80%9D-in-etc-nginx-nginx-conf-86"><span class="toc-number">2.3.2.</span> <span class="toc-text">unknown directive “stream” in &#x2F;etc&#x2F;nginx&#x2F;nginx.conf:86</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        trojan多网站共存(共用443端口)
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">李哲操</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-03-06T08:24:14.000Z" class="dt-published" itemprop="datePublished">2024-03-06</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/software/">software</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/nginx/" rel="tag">nginx</a>, <a class="p-category" href="/tags/trojan/" rel="tag">trojan</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>最近因为自建vaultwarden密码管理器, 遇到了一个棘手的问题。 由于trojan需要运行在443端口（因为要伪装成正常流量），所以导致和vaultwarden或者其他网站产生了端口冲突。网上搜索下来，发现文章都讲得不是很细，踩了很多坑，所以这里详细记录下步骤。</p>
+<blockquote>
+<p>参考: <a target="_blank" rel="noopener" href="https://www.chengxiaobai.com/trouble-maker/trojan-shared-443-port-scheme.html">Trojan 共用 443 端口方案 | 程小白</a></p>
+</blockquote>
+<p>具体原来上面这个引用文章已经介绍的很清晰了，我这里不再赘述，只讲最关键的配置。</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>原理就是通过nginx的stream模块进行四层转发（因为trojan的原因不能在第七层，具体参考引用文章），trojan直接转发即可，自己的服务需要经过nginx本身加上ssl支持，所以需要多转一次</p>
+<h1 id="具体案例"><a href="#具体案例" class="headerlink" title="具体案例"></a>具体案例</h1><h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>trojan 部署在64411端口，trojan的自定义部署可以参考<a target="_blank" rel="noopener" href="https://github.com/jinwyp/one_click_script/blob/master/README2_CN.md">one_click_script/README2_CN.md at master · jinwyp/one_click_script · GitHub</a><br>vaultwarden部署在1888端口<br>都需要实现通过nginx 443端口反向代理</p>
+<h2 id="具体配置"><a href="#具体配置" class="headerlink" title="具体配置"></a>具体配置</h2><p>nginx配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">stream &#123;</span><br><span class="line">    map $ssl_preread_server_name $backend_name &#123;</span><br><span class="line">        bitwarden.lizhecao.cn warden;</span><br><span class="line">        gpt.lizhecao.cn trojan;</span><br><span class="line">        # 默认其他流量转发给trojan，这里没有限制，有其他服务更加适合的都可以配置</span><br><span class="line">        default trojan;</span><br><span class="line">    &#125;</span><br><span class="line">	# 转发给nginx自己监听的端口，因为这里需要nginx来实现ssl访问vaultwarden</span><br><span class="line">    upstream warden &#123;</span><br><span class="line">        server 127.0.0.1:998;</span><br><span class="line">    &#125;</span><br><span class="line">	# 直接转发给trojan的端口即可</span><br><span class="line">    upstream trojan &#123;</span><br><span class="line">        server 127.0.0.1:64411;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen 443 reuseport;</span><br><span class="line">        listen [::]:443 reuseport;</span><br><span class="line">        proxy_pass  $backend_name;</span><br><span class="line">        ssl_preread on;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">	# ...默认配置忽略</span><br><span class="line"></span><br><span class="line">	# 这里用来转发请求给vaultwarden</span><br><span class="line">    server &#123;</span><br><span class="line">        listen 80;</span><br><span class="line">        listen 998 ssl;    # vaultwarden通过998端口转发</span><br><span class="line">        server_name _;    #对应的域名或者ip，把xxx.com改成你们自己的域名就可以了</span><br><span class="line">        ssl_certificate /nginxweb/cert/fullchain.cer;          #申请的xxx.crt文件的位置</span><br><span class="line">        ssl_certificate_key /nginxweb/cert/private.key;        #申请的xxx.key文件的位置</span><br><span class="line">        ssl_session_timeout 5m;</span><br><span class="line">        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;</span><br><span class="line">        ssl_prefer_server_ciphers on;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            proxy_pass http://127.0.0.1:1888; # 最终转发给vaultwarden服务监听的端口</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><h3 id="Permission-denied-while-reading-upstream"><a href="#Permission-denied-while-reading-upstream" class="headerlink" title="Permission denied while reading upstream"></a>Permission denied while reading upstream</h3><p>查看nginx的error日志发现vaultwarden的请求一直报这个错误，原来是对应的文件没有权限导致的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown -R nginx:nginx /var/lib/nginx/tmp/proxy/*</span><br></pre></td></tr></table></figure>
+<p>参考：<a target="_blank" rel="noopener" href="https://serverfault.com/questions/235154/permission-denied-while-reading-upstream">nginx - Permission denied while reading upstream - Server Fault</a></p>
+<h3 id="unknown-directive-“stream”-in-etc-nginx-nginx-conf-86"><a href="#unknown-directive-“stream”-in-etc-nginx-nginx-conf-86" class="headerlink" title="unknown directive “stream” in /etc/nginx/nginx.conf:86"></a>unknown directive “stream” in /etc/nginx/nginx.conf:86</h3><p>stream 模块不存在，直接安装即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install nginx-mod-stream</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这里要注意你的nginx也需要是通过yum install 的方式才可以，否则通过yum方式并不会安装到你自定义的nginx上</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">首页</a></li>
+        
+          <li><a href="/about/">关于</a></li>
+        
+          <li><a href="/archives/">归档</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%A1%88%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">具体案例</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">2.1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E9%85%8D%E7%BD%AE"><span class="toc-number">2.2.</span> <span class="toc-text">具体配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.3.</span> <span class="toc-text">遇到的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Permission-denied-while-reading-upstream"><span class="toc-number">2.3.1.</span> <span class="toc-text">Permission denied while reading upstream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unknown-directive-%E2%80%9Cstream%E2%80%9D-in-etc-nginx-nginx-conf-86"><span class="toc-number">2.3.2.</span> <span class="toc-text">unknown directive “stream” in &#x2F;etc&#x2F;nginx&#x2F;nginx.conf:86</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&text=trojan多网站共存(共用443端口)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&title=trojan多网站共存(共用443端口)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&is_video=false&description=trojan多网站共存(共用443端口)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=trojan多网站共存(共用443端口)&body=Check out this article: https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&title=trojan多网站共存(共用443端口)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&title=trojan多网站共存(共用443端口)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&title=trojan多网站共存(共用443端口)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&title=trojan多网站共存(共用443端口)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&name=trojan多网站共存(共用443端口)&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://lizhecao.github.io/2024/03/06/trojan%E5%A4%9A%E7%BD%91%E7%AB%99%E5%85%B1%E5%AD%98(%E5%85%B1%E7%94%A8443%E7%AB%AF%E5%8F%A3)/&t=trojan多网站共存(共用443端口)"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    李哲操
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">首页</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/archives/">归档</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">项目</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板！\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功！");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

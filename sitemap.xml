@@ -20,15 +20,6 @@
   </url>
   
   <url>
-    <loc>https://lizhecao.github.io/categories/index.html</loc>
-    
-    <lastmod>2024-03-06</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://lizhecao.github.io/about/index.html</loc>
     
     <lastmod>2024-03-06</lastmod>
@@ -38,7 +29,7 @@
   </url>
   
   <url>
-    <loc>https://lizhecao.github.io/2018/11/27/zsh-%E6%89%B9%E9%87%8F%E4%BF%AE%E6%94%B9profiles/</loc>
+    <loc>https://lizhecao.github.io/categories/index.html</loc>
     
     <lastmod>2024-03-06</lastmod>
     
@@ -74,6 +65,15 @@
   </url>
   
   <url>
+    <loc>https://lizhecao.github.io/2018/11/27/zsh-%E6%89%B9%E9%87%8F%E4%BF%AE%E6%94%B9profiles/</loc>
+    
+    <lastmod>2024-03-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://lizhecao.github.io/2020/11/26/%E8%AE%B0%E4%B8%80%E6%AC%A1%E7%BA%BF%E4%B8%8AOkhttp%E8%B6%85%E6%97%B6%E9%97%AE%E9%A2%98%E5%AE%9A%E4%BD%8D/</loc>
     
     <lastmod>2024-03-06</lastmod>
@@ -83,7 +83,7 @@
   </url>
   
   <url>
-    <loc>https://lizhecao.github.io/2022/09/16/%E8%BD%AF%E4%BB%B6%E7%94%B5%E8%84%91%E9%97%AE%E9%A2%98%E5%92%A8%E8%AF%A2%E8%A7%A3%E5%86%B3%E6%9C%8D%E5%8A%A1/</loc>
+    <loc>https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/</loc>
     
     <lastmod>2024-03-06</lastmod>
     
@@ -92,7 +92,7 @@
   </url>
   
   <url>
-    <loc>https://lizhecao.github.io/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/</loc>
+    <loc>https://lizhecao.github.io/2022/09/16/%E8%BD%AF%E4%BB%B6%E7%94%B5%E8%84%91%E9%97%AE%E9%A2%98%E5%92%A8%E8%AF%A2%E8%A7%A3%E5%86%B3%E6%9C%8D%E5%8A%A1/</loc>
     
     <lastmod>2024-03-06</lastmod>
     
@@ -262,13 +262,6 @@
   </url>
   
   <url>
-    <loc>https://lizhecao.github.io/tags/zsh/</loc>
-    <lastmod>2024-04-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://lizhecao.github.io/tags/%E5%A4%A7%E5%AD%A6/</loc>
     <lastmod>2024-04-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -298,6 +291,13 @@
   
   <url>
     <loc>https://lizhecao.github.io/tags/%E8%B7%91%E6%AD%A5/</loc>
+    <lastmod>2024-04-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://lizhecao.github.io/tags/zsh/</loc>
     <lastmod>2024-04-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

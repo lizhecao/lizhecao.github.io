@@ -14,7 +14,7 @@
 <meta property="og:description" content="whymac多显示器的情况下，由于习惯用spotlight(alfred) 之类的软件切换应用，导致经常出现的情况下，我跳转（激活）到了另一个显示器上的一个应用，但是鼠标还停留在原显示器上，我想点一下，还得再移动下鼠标过来。多屏幕操作的时候的鼠标移动又挺浪费时间的。 How在网上搜索后发现了一个很好用的方法，参考：How to quickly move mouse cursor between m">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-29T07:04:20.000Z">
-<meta property="article:modified_time" content="2024-03-06T07:28:29.659Z">
+<meta property="article:modified_time" content="2024-08-21T10:17:54.063Z">
 <meta property="article:author" content="李哲操">
 <meta property="article:tag" content="hammerspoon">
 <meta name="twitter:card" content="summary">
@@ -171,7 +171,7 @@
 <p>方法如下</p>
 <ol>
 <li>下载 <a target="_blank" rel="noopener" href="http://www.hammerspoon.org/">hammerspoon</a></li>
-<li>下载它的插件 spoon <a target="_blank" rel="noopener" href="https://www.hammerspoon.org/Spoons/MouseFollowsFocus.html">MouseFollowsFocus</a>（如果觉得不适应的可以下载我的脚本，做了一些优化<a target="_blank" rel="noopener" href="https://github.com/lizhecao/databases/blob/main/mac/hammerspoon/MouseFollowsFocus.spoon/init.lua">MyMouseFollowsFocus</a> ）</li>
+<li>下载它的插件 spoon <a target="_blank" rel="noopener" href="https://www.hammerspoon.org/Spoons/MouseFollowsFocus.html">MouseFollowsFocus</a>（如果觉得不适应的可以下载我的脚本，做了一些优化<a target="_blank" rel="noopener" href="https://github.com/lizhecao/databases/blob/a418e216e29b411b6f997cf727b6d0cf9fc9f9f0/mac/hammerspoon/MouseFollowsFocus.spoon.zip">MyMouseFollowsFocus</a> ）</li>
 <li>vim ~/.hammerspoon/init.lua</li>
 </ol>
 <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mouse_follows_focus = hs.loadSpoon(<span class="string">&quot;MouseFollowsFocus&quot;</span>)</span><br><span class="line">mouse_follows_focus:configure(&#123;&#125;)</span><br><span class="line">mouse_follows_focus:start()</span><br></pre></td></tr></table></figure>
@@ -181,7 +181,7 @@
 <h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><blockquote>
 <p>默认的脚本存在一些对我使用体验较差的问题，所以我做了一些优化</p>
 </blockquote>
-<p>不想看原理的可以直接下载我的脚本即可：<a target="_blank" rel="noopener" href="https://github.com/lizhecao/databases/blob/main/mac/hammerspoon/MouseFollowsFocus.spoon/init.lua">MyMouseFollowsFocus</a><br>如果需要定制化，可以在修改脚本后，重新加载就可以了。脚本默认加载后的位置在~/.hammerspoon/Spoons/MouseFollowsFocus.spoon/init.lua</p>
+<p>不想看原理的可以直接下载我的脚本即可：<a target="_blank" rel="noopener" href="https://github.com/lizhecao/databases/blob/a418e216e29b411b6f997cf727b6d0cf9fc9f9f0/mac/hammerspoon/MouseFollowsFocus.spoon.zip">MyMouseFollowsFocus</a><br>如果需要定制化，可以在修改脚本后，重新加载就可以了。脚本默认加载后的位置在~/.hammerspoon/Spoons/MouseFollowsFocus.spoon/init.lua</p>
 <ol>
 <li>xnip截图软件会自动激活所有桌面，导致鼠标重复跳转。</li>
 </ol>

@@ -218,6 +218,21 @@
       </tags>
   </entry>
   <entry>
+    <title>iterm2 批量修改profiles</title>
+    <url>/2018/11/27/zsh-%E6%89%B9%E9%87%8F%E4%BF%AE%E6%94%B9profiles/</url>
+    <content><![CDATA[<p>iterm2 支持批量修改profiles，只不过这个功能比较难找到，备个案</p>
+<p>先修改其中一个profile, 然后如下操作:<br>preferences -&gt; profiles -&gt; 选中已经修改的profile -&gt; (左下角) Other Actions -&gt; Bulk copy from Selected Profile -&gt; 勾选你要复制的配置(例如keys) -&gt; 下方选中要批量修改的profiles -&gt; 点击copy即可</p>
+<p><img src="/images/zsh-%E6%89%B9%E9%87%8F%E4%BF%AE%E6%94%B9profiles/1-5457843.png" alt="点击bulk copy后的页面"></p>
+]]></content>
+      <categories>
+        <category>软件折腾</category>
+      </categories>
+      <tags>
+        <tag>wiki</tag>
+        <tag>zsh</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>写给刚上大学的弟弟的一封信</title>
     <url>/2018/11/29/%E5%86%99%E7%BB%99%E5%88%9A%E4%B8%8A%E5%A4%A7%E5%AD%A6%E7%9A%84%E5%BC%9F%E5%BC%9F%E7%9A%84%E4%B8%80%E5%B0%81%E4%BF%A1/</url>
     <content><![CDATA[<p>  亲爱的弟弟，转眼之间你已经要上大学了，恭喜你踏上了人生又一个新的里程碑，也希望你能够好好享受你接下来的四年的大学生活</p>
@@ -241,24 +256,6 @@
       <tags>
         <tag>大学</tag>
         <tag>人生</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>开发心得</title>
-    <url>/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/</url>
-    <content><![CDATA[<ul>
-<li>开发要学会保护好自己。加班熬夜的时候可没有人陪着你。所以像这种要涉及到加班发布的方案一定要自己好好设计。可以不深夜搞一定要尽量不晚上搞。要深夜搞的一定要再三确认好各种细节。提前做好准备，确保深夜的时候需要的工作量很小很快。需要长时间的要确保程序自动化。</li>
-<li>看源码之前一定要先好好了解这个框架/应用 的主要功能，怎么使用，有哪些扩展点。有个大概的了解之后再来看代码就舒服多了<ul>
-<li>例如spring源码。我以前对spring只是停留在简单地用一下。大部分功能都不了解，那时候去看源码真的是一脸懵逼。在看了spring实战和spring揭秘后，特别是spring揭秘。我就了解了bean的生命周期，spring它在bean的创建过程中提供了很多扩展点。知道了beanFactory也有一些扩展点。知道了spring其实做的就是从xml读取配置，然后将配置解析成beanDefinition，然后再在getBean的时候从缓存或者直接用beanDefinition来创建bean。诸如此类的。那么，当我再来看源码的时候。诶，我就发现，源码好像在跟着我的想法走。我知道在createBean实例之后，为什么要调用aware的set方法了，为什么要调用beanPostProcessor的相关方法了等等。</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>技术人生</category>
-      </categories>
-      <tags>
-        <tag>思考</tag>
       </tags>
   </entry>
   <entry>
@@ -352,18 +349,21 @@
       </tags>
   </entry>
   <entry>
-    <title>iterm2 批量修改profiles</title>
-    <url>/2018/11/27/zsh-%E6%89%B9%E9%87%8F%E4%BF%AE%E6%94%B9profiles/</url>
-    <content><![CDATA[<p>iterm2 支持批量修改profiles，只不过这个功能比较难找到，备个案</p>
-<p>先修改其中一个profile, 然后如下操作:<br>preferences -&gt; profiles -&gt; 选中已经修改的profile -&gt; (左下角) Other Actions -&gt; Bulk copy from Selected Profile -&gt; 勾选你要复制的配置(例如keys) -&gt; 下方选中要批量修改的profiles -&gt; 点击copy即可</p>
-<p><img src="/images/zsh-%E6%89%B9%E9%87%8F%E4%BF%AE%E6%94%B9profiles/1-5457843.png" alt="点击bulk copy后的页面"></p>
+    <title>开发心得</title>
+    <url>/2020/11/25/%E5%BC%80%E5%8F%91%E5%BF%83%E5%BE%97/</url>
+    <content><![CDATA[<ul>
+<li>开发要学会保护好自己。加班熬夜的时候可没有人陪着你。所以像这种要涉及到加班发布的方案一定要自己好好设计。可以不深夜搞一定要尽量不晚上搞。要深夜搞的一定要再三确认好各种细节。提前做好准备，确保深夜的时候需要的工作量很小很快。需要长时间的要确保程序自动化。</li>
+<li>看源码之前一定要先好好了解这个框架/应用 的主要功能，怎么使用，有哪些扩展点。有个大概的了解之后再来看代码就舒服多了<ul>
+<li>例如spring源码。我以前对spring只是停留在简单地用一下。大部分功能都不了解，那时候去看源码真的是一脸懵逼。在看了spring实战和spring揭秘后，特别是spring揭秘。我就了解了bean的生命周期，spring它在bean的创建过程中提供了很多扩展点。知道了beanFactory也有一些扩展点。知道了spring其实做的就是从xml读取配置，然后将配置解析成beanDefinition，然后再在getBean的时候从缓存或者直接用beanDefinition来创建bean。诸如此类的。那么，当我再来看源码的时候。诶，我就发现，源码好像在跟着我的想法走。我知道在createBean实例之后，为什么要调用aware的set方法了，为什么要调用beanPostProcessor的相关方法了等等。</li>
+</ul>
+</li>
+</ul>
 ]]></content>
       <categories>
-        <category>软件折腾</category>
+        <category>技术人生</category>
       </categories>
       <tags>
-        <tag>wiki</tag>
-        <tag>zsh</tag>
+        <tag>思考</tag>
       </tags>
   </entry>
   <entry>
@@ -409,6 +409,33 @@
       </tags>
   </entry>
   <entry>
+    <title>软件电脑问题咨询解决服务</title>
+    <url>/2022/09/16/%E8%BD%AF%E4%BB%B6%E7%94%B5%E8%84%91%E9%97%AE%E9%A2%98%E5%92%A8%E8%AF%A2%E8%A7%A3%E5%86%B3%E6%9C%8D%E5%8A%A1/</url>
+    <content><![CDATA[<p>本人是一名软件开发工程师，目前就职于某大厂， 日常开发中遇到的软件问题也很多，所以积累了很多经验，希望能够帮到有需要的朋友。</p>
+<p>服务内容包括但不限于以下几种：</p>
+<ol>
+<li>软件开发，数据处理工具（例如批量处理excel、文档）</li>
+<li>软件安装、激活</li>
+<li>其他各种软件问题（软件报错、无法运行之类）</li>
+</ol>
+<p><img src="/images/%E8%BD%AF%E4%BB%B6%E7%94%B5%E8%84%91%E9%97%AE%E9%A2%98%E5%92%A8%E8%AF%A2%E8%A7%A3%E5%86%B3%E6%9C%8D%E5%8A%A1/image-20220916113948499.png" alt="image-20220916113948499"></p>
+<p><img src="/images/%E8%BD%AF%E4%BB%B6%E7%94%B5%E8%84%91%E9%97%AE%E9%A2%98%E5%92%A8%E8%AF%A2%E8%A7%A3%E5%86%B3%E6%9C%8D%E5%8A%A1/image-20220916114326451.png" alt="image-20220916114326451"></p>
+<p>有需要的可以通过以下几种方式联系我</p>
+<ol>
+<li><p>发邮件：<a href="mailto:&#53;&#52;&#49;&#x39;&#x39;&#53;&#x31;&#x34;&#x39;&#64;&#x71;&#113;&#x2e;&#x63;&#x6f;&#109;">&#53;&#52;&#49;&#x39;&#x39;&#53;&#x31;&#x34;&#x39;&#64;&#x71;&#113;&#x2e;&#x63;&#x6f;&#109;</a></p>
+</li>
+<li><p>微信号：zhecaoli</p>
+</li>
+<li><p>直接在下面评论留言：给下你的邮箱或者微信号</p>
+</li>
+</ol>
+<p>根据问题解决所需的时间，会适当收一点费用。介意勿联。</p>
+]]></content>
+      <categories>
+        <category>软件折腾</category>
+      </categories>
+  </entry>
+  <entry>
     <title>鼠标在显示器之间快速移动</title>
     <url>/2023/08/29/%E9%BC%A0%E6%A0%87%E5%9C%A8%E6%98%BE%E7%A4%BA%E5%99%A8%E4%B9%8B%E9%97%B4%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8/</url>
     <content><![CDATA[<h1 id="why"><a href="#why" class="headerlink" title="why"></a>why</h1><p>mac多显示器的情况下，由于习惯用spotlight(alfred) 之类的软件切换应用，导致经常出现的情况下，我跳转（激活）到了另一个显示器上的一个应用，但是鼠标还停留在原显示器上，我想点一下，还得再移动下鼠标过来。多屏幕操作的时候的鼠标移动又挺浪费时间的。</p>
@@ -416,7 +443,7 @@
 <p>方法如下</p>
 <ol>
 <li>下载 <a href="http://www.hammerspoon.org/">hammerspoon</a></li>
-<li>下载它的插件 spoon <a href="https://www.hammerspoon.org/Spoons/MouseFollowsFocus.html">MouseFollowsFocus</a>（如果觉得不适应的可以下载我的脚本，做了一些优化<a href="https://github.com/lizhecao/databases/blob/main/mac/hammerspoon/MouseFollowsFocus.spoon/init.lua">MyMouseFollowsFocus</a> ）</li>
+<li>下载它的插件 spoon <a href="https://www.hammerspoon.org/Spoons/MouseFollowsFocus.html">MouseFollowsFocus</a>（如果觉得不适应的可以下载我的脚本，做了一些优化<a href="https://github.com/lizhecao/databases/blob/a418e216e29b411b6f997cf727b6d0cf9fc9f9f0/mac/hammerspoon/MouseFollowsFocus.spoon.zip">MyMouseFollowsFocus</a> ）</li>
 <li>vim ~/.hammerspoon/init.lua</li>
 </ol>
 <figure class="highlight lua"><table><tr><td class="code"><pre><span class="line">mouse_follows_focus = hs.loadSpoon(<span class="string">&quot;MouseFollowsFocus&quot;</span>)</span><br><span class="line">mouse_follows_focus:configure(&#123;&#125;)</span><br><span class="line">mouse_follows_focus:start()</span><br></pre></td></tr></table></figure>
@@ -426,7 +453,7 @@
 <h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><blockquote>
 <p>默认的脚本存在一些对我使用体验较差的问题，所以我做了一些优化</p>
 </blockquote>
-<p>不想看原理的可以直接下载我的脚本即可：<a href="https://github.com/lizhecao/databases/blob/main/mac/hammerspoon/MouseFollowsFocus.spoon/init.lua">MyMouseFollowsFocus</a><br>如果需要定制化，可以在修改脚本后，重新加载就可以了。脚本默认加载后的位置在~/.hammerspoon/Spoons/MouseFollowsFocus.spoon/init.lua</p>
+<p>不想看原理的可以直接下载我的脚本即可：<a href="https://github.com/lizhecao/databases/blob/a418e216e29b411b6f997cf727b6d0cf9fc9f9f0/mac/hammerspoon/MouseFollowsFocus.spoon.zip">MyMouseFollowsFocus</a><br>如果需要定制化，可以在修改脚本后，重新加载就可以了。脚本默认加载后的位置在~/.hammerspoon/Spoons/MouseFollowsFocus.spoon/init.lua</p>
 <ol>
 <li>xnip截图软件会自动激活所有桌面，导致鼠标重复跳转。</li>
 </ol>
@@ -445,32 +472,5 @@
       <tags>
         <tag>hammerspoon</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>软件电脑问题咨询解决服务</title>
-    <url>/2022/09/16/%E8%BD%AF%E4%BB%B6%E7%94%B5%E8%84%91%E9%97%AE%E9%A2%98%E5%92%A8%E8%AF%A2%E8%A7%A3%E5%86%B3%E6%9C%8D%E5%8A%A1/</url>
-    <content><![CDATA[<p>本人是一名软件开发工程师，目前就职于某大厂， 日常开发中遇到的软件问题也很多，所以积累了很多经验，希望能够帮到有需要的朋友。</p>
-<p>服务内容包括但不限于以下几种：</p>
-<ol>
-<li>软件开发，数据处理工具（例如批量处理excel、文档）</li>
-<li>软件安装、激活</li>
-<li>其他各种软件问题（软件报错、无法运行之类）</li>
-</ol>
-<p><img src="/images/%E8%BD%AF%E4%BB%B6%E7%94%B5%E8%84%91%E9%97%AE%E9%A2%98%E5%92%A8%E8%AF%A2%E8%A7%A3%E5%86%B3%E6%9C%8D%E5%8A%A1/image-20220916113948499.png" alt="image-20220916113948499"></p>
-<p><img src="/images/%E8%BD%AF%E4%BB%B6%E7%94%B5%E8%84%91%E9%97%AE%E9%A2%98%E5%92%A8%E8%AF%A2%E8%A7%A3%E5%86%B3%E6%9C%8D%E5%8A%A1/image-20220916114326451.png" alt="image-20220916114326451"></p>
-<p>有需要的可以通过以下几种方式联系我</p>
-<ol>
-<li><p>发邮件：<a href="mailto:&#x35;&#52;&#49;&#x39;&#57;&#53;&#49;&#52;&#x39;&#x40;&#113;&#x71;&#x2e;&#99;&#111;&#x6d;">&#x35;&#52;&#49;&#x39;&#57;&#53;&#49;&#52;&#x39;&#x40;&#113;&#x71;&#x2e;&#99;&#111;&#x6d;</a></p>
-</li>
-<li><p>微信号：zhecaoli</p>
-</li>
-<li><p>直接在下面评论留言：给下你的邮箱或者微信号</p>
-</li>
-</ol>
-<p>根据问题解决所需的时间，会适当收一点费用。介意勿联。</p>
-]]></content>
-      <categories>
-        <category>软件折腾</category>
-      </categories>
   </entry>
 </search>

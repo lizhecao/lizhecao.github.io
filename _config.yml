@@ -105,7 +105,7 @@ baidusitemap:
   path: baidusitemap.xml
 
 theme_config:
-  colorscheme: light
+  colorscheme: dark
 
 posts_overview:
   show_all_posts: false

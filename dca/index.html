@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>中外长期定投组合</title>
-  <meta name="description" content="不考虑现有持仓的中外长期定投组合：全球股票、中国宽基、人民币短债、黄金与现金">
+  <meta name="description" content="不考虑现有持仓的中外长期定投组合：全球宽基、中国宽基与红利因子、人民币短债、黄金和现金">
   <style>
     :root {
       --ink: #15231e;
@@ -151,6 +151,34 @@
     .hero-stat strong { display: block; font-size: 21px; }
     .hero-stat span { color: rgba(255,255,255,.62); font-size: 11px; }
 
+    .view-tabs {
+      position: sticky;
+      top: 10px;
+      z-index: 10;
+      display: inline-flex;
+      gap: 6px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: rgba(255, 253, 248, .9);
+      box-shadow: 0 10px 30px rgba(36, 47, 41, .08);
+      backdrop-filter: blur(14px);
+    }
+    .view-button {
+      min-height: 40px;
+      padding: 9px 18px;
+      border: 0;
+      border-radius: 9px;
+      color: var(--muted);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 820;
+      cursor: pointer;
+    }
+    .view-button[aria-selected="true"] { color: #fff; background: var(--green); }
+    .view-panel { display: none; }
+    .view-panel.active { display: block; }
+
     .section { padding: 42px 0; }
     .section-heading { display: grid; grid-template-columns: 1fr minmax(260px, .58fr); gap: 36px; align-items: end; margin-bottom: 24px; }
     .section-eyebrow { color: var(--clay); font-size: 11px; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
@@ -212,9 +240,11 @@
       height: 240px;
       border-radius: 50%;
       background: conic-gradient(
-        var(--green) 0 45%,
-        var(--green-2) 45% 60%,
-        var(--clay) 60% 70%,
+        var(--green) 0 40%,
+        var(--green-2) 40% 55%,
+        #7f955c 55% 60%,
+        #b38b58 60% 65%,
+        var(--clay) 65% 70%,
         var(--blue) 70% 85%,
         var(--gold) 85% 95%,
         var(--cream) 95% 100%
@@ -287,6 +317,33 @@
     .logic-card h3 { margin: 18px 0 9px; font-size: 16px; }
     .logic-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.72; }
 
+    .logic-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .logic-summary-card {
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .logic-summary-card span { color: var(--muted); font-size: 11px; }
+    .logic-summary-card strong { display: block; margin: 7px 0 9px; font-family: Georgia, serif; font-size: 34px; }
+    .logic-summary-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
+    .valuation-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; background: var(--card); }
+    .valuation-table { width: 100%; min-width: 680px; border-collapse: collapse; }
+    .valuation-table th, .valuation-table td { padding: 16px 18px; border-bottom: 1px solid var(--line); text-align: left; font-size: 12px; }
+    .valuation-table th { color: var(--muted); background: rgba(231,223,204,.32); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
+    .valuation-table tr:last-child td { border-bottom: 0; }
+    .valuation-table td strong { font-size: 15px; }
+    .decision-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .decision-card { padding: 24px; border-left: 4px solid var(--green); background: rgba(255,253,248,.72); }
+    .decision-card h3 { margin: 0 0 9px; font-size: 16px; }
+    .decision-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.72; }
+    .decision-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .decision-step { padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); }
+    .decision-step span { color: var(--clay); font-family: Georgia, serif; font-size: 24px; }
+    .decision-step strong { display: block; margin: 12px 0 7px; font-size: 13px; }
+    .decision-step p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+
     .stress {
       display: grid;
       grid-template-columns: minmax(280px, .68fr) minmax(0, 1.32fr);
@@ -349,6 +406,7 @@
       .section-heading { grid-template-columns: 1fr; gap: 12px; }
       .market-grid { grid-template-columns: 1fr; }
       .rules { grid-template-columns: repeat(2, 1fr); }
+      .logic-summary, .decision-flow { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 680px) {
       .shell { width: min(100% - 24px, 1240px); }
@@ -364,7 +422,9 @@
       #monthlyAmount { width: 160px; }
       .allocation-table th:nth-child(2), .allocation-table td:nth-child(2) { display: none; }
       .donut { width: 210px; height: 210px; }
-      .logic-grid, .rules, .stress-result, .sources { grid-template-columns: 1fr; }
+      .logic-grid, .logic-summary, .decision-grid, .decision-flow, .rules, .stress-result, .sources { grid-template-columns: 1fr; }
+      .view-tabs { top: 6px; width: 100%; }
+      .view-button { flex: 1; }
       .instrument-row { grid-template-columns: 1fr; gap: 8px; }
       .channel-panel { padding-inline: 18px; }
       .stress-wide { grid-column: auto; }
@@ -390,7 +450,7 @@
           <span class="kicker">Standalone DCA Portfolio</span>
           <h1>中外长期<br>定投组合</h1>
           <p class="hero-copy">
-            一套<strong>不考虑现有持仓</strong>的独立配置。用全球股票参与长期增长，以中国宽基保留本土权益，
+            一套<strong>不考虑现有持仓</strong>的独立配置。用全球股票参与长期增长，以中国宽基和红利因子保留本土权益，
             再用人民币短债、黄金和现金控制组合在坏年份里的损伤。
           </p>
           <div class="hero-actions">
@@ -410,6 +470,12 @@
         </aside>
       </section>
 
+      <div class="view-tabs" role="tablist" aria-label="页面内容">
+        <button class="view-button" type="button" role="tab" aria-selected="true" aria-controls="planPanel" data-view="plan">组合方案</button>
+        <button class="view-button" type="button" role="tab" aria-selected="false" aria-controls="logicPanel" data-view="logic">配置逻辑</button>
+      </div>
+
+      <div id="planPanel" class="view-panel active" role="tabpanel">
       <section id="planner" class="section">
         <div class="section-heading">
           <div>
@@ -446,7 +512,7 @@
             <div id="allocationChart" class="donut" role="img" aria-label="组合权重环形图">
               <div class="donut-center"><strong>100%</strong><span>独立组合</span></div>
             </div>
-            <p class="mix-caption">45% 全球核心 · 25% 中国宽基<br>20% 稳健资产 · 10% 黄金</p>
+            <p class="mix-caption">40% 全球核心 · 30% 中国及港股<br>20% 短债与现金 · 10% 黄金</p>
           </div>
         </div>
       </section>
@@ -462,8 +528,8 @@
         <div class="market-grid">
           <article class="market-card">
             <span>全球股票 · MSCI ACWI</span>
-            <strong>23.5×</strong>
-            <p>2026-04-30 市盈率；全球宽基已不便宜，因此坚持定投，不一次性冲入。</p>
+            <strong>23.64×</strong>
+            <p>2026-06-30 市盈率；估值偏高且美国科技集中，因此将全球核心从45%降到40%。</p>
           </article>
           <article class="market-card">
             <span>中国股票 · MSCI China</span>
@@ -471,9 +537,9 @@
             <p>2026-06-30 市盈率；估值更低，但政策、盈利和货币风险仍需分散。</p>
           </article>
           <article class="market-card">
-            <span>中国 5 年期国债</span>
-            <strong>1.45%</strong>
-            <p>2026-07-28 到期收益率；债券仓用于稳定和再平衡，不承担高收益目标。</p>
+            <span>中国A股 · 中证A500</span>
+            <strong>17.14×</strong>
+            <p>2026-06-30 市盈率；估值低于全球宽基，但仍通过红利与港股分散风格风险。</p>
           </article>
         </div>
       </section>
@@ -513,8 +579,8 @@
           </article>
           <article class="logic-card">
             <span class="logic-index">2</span>
-            <h3>中国配置分成 A 股与港股</h3>
-            <p>A500覆盖更多本土行业，恒生宽基补充港股金融、互联网和消费；两者合计 25%，保留本土机会但不过半。</p>
+            <h3>中国配置分成核心与因子</h3>
+            <p>A500占15%，红利低波与红利质量各5%，港股宽基5%；合计30%，利用估值优势但不押注单一风格。</p>
           </article>
           <article class="logic-card">
             <span class="logic-index">3</span>
@@ -593,6 +659,9 @@
           <a href="https://corporate.vanguard.com/content/corporatesite/us/en/corp/vemo/vemo-return-forecasts.html" target="_blank" rel="noreferrer">Vanguard 2026-06-30 长期回报预测</a>
           <a href="https://www.msci.com/documents/10199/255599/msci-acwi.pdf" target="_blank" rel="noreferrer">MSCI ACWI 指数事实表</a>
           <a href="https://www.msci.com/indexes/index/302400/msci-china-index" target="_blank" rel="noreferrer">MSCI China 指数数据</a>
+          <a href="https://oss-ch.csindex.com.cn/static/html/csindex/public/uploads/indices/detail/files/zh_CN/000510factsheet.pdf" target="_blank" rel="noreferrer">中证A500指数事实表</a>
+          <a href="https://oss-ch.csindex.com.cn/static/html/csindex/public/uploads/indices/detail/files/zh_CN/930955factsheet.pdf" target="_blank" rel="noreferrer">中证红利低波动100指数事实表</a>
+          <a href="https://oss-ch.csindex.com.cn/static/html/csindex/public/uploads/indices/detail/files/zh_CN/932315factsheet.pdf" target="_blank" rel="noreferrer">中证全指红利质量指数事实表</a>
           <a href="https://www.sse.com.cn/disclosure/fund/announcement/c/new/2026-05-29/512050_20260529_7LIV.pdf" target="_blank" rel="noreferrer">中证A500ETF 512050 产品概要</a>
           <a href="https://yield.chinabond.com.cn/cbweb-czb-web/czb/moreInfo?locale=cn_ZH&nameType=1" target="_blank" rel="noreferrer">中国国债收益率曲线</a>
           <a href="https://www.gold.org/goldhub/research/relevance-of-gold-as-a-strategic-asset/portfolio-impact" target="_blank" rel="noreferrer">世界黄金协会：黄金对组合风险收益的影响</a>
@@ -600,6 +669,111 @@
           <a href="https://www.irs.gov/individuals/international-taxpayers/some-nonresidents-with-us-assets-must-file-estate-tax-returns" target="_blank" rel="noreferrer">美国 IRS：非居民美国资产遗产税说明</a>
         </div>
       </section>
+      </div>
+
+      <div id="logicPanel" class="view-panel" role="tabpanel">
+        <section class="section">
+          <div class="section-heading">
+            <div>
+              <span class="section-eyebrow">Allocation Rationale</span>
+              <h2>不是选最便宜的，而是给每种风险定价</h2>
+            </div>
+            <p class="section-note">估值决定倾斜幅度，不决定是否持有。当前降低全球权重、增加中国权益，但不把低估值误当成低风险。</p>
+          </div>
+
+          <div class="logic-summary">
+            <article class="logic-summary-card">
+              <span>全球权益</span>
+              <strong>40%</strong>
+              <p>保留跨国家、跨货币和全球龙头敞口；从45%下调，回应当前较高估值与美国科技集中。</p>
+            </article>
+            <article class="logic-summary-card">
+              <span>中国及港股权益</span>
+              <strong>30%</strong>
+              <p>A500做核心，红利低波与红利质量补充价值因子，港股保留不同上市地和行业结构。</p>
+            </article>
+            <article class="logic-summary-card">
+              <span>防守资产</span>
+              <strong>30%</strong>
+              <p>15%短债、10%黄金、5%现金，降低被迫低位卖出的概率，并为年度再平衡提供资金。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-heading">
+            <div>
+              <span class="section-eyebrow">Valuation</span>
+              <h2>为什么把全球从45%降到40%</h2>
+            </div>
+            <p class="section-note">统一采用指数公司2026年6月30日数据。盈利收益率仅为 P/E 的倒数，不等于未来年化回报。</p>
+          </div>
+          <div class="valuation-table-wrap">
+            <table class="valuation-table">
+              <thead>
+                <tr><th>指数</th><th>P/E</th><th>盈利收益率</th><th>股息率</th><th>在组合中的含义</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>MSCI ACWI</strong></td><td>23.64×</td><td>4.23%</td><td>1.57%</td><td>估值偏高，维持核心但降低权重</td></tr>
+                <tr><td><strong>中证A500</strong></td><td>17.14×</td><td>5.83%</td><td>1.74%</td><td>行业覆盖更均衡，增加至15%</td></tr>
+                <tr><td><strong>MSCI China</strong></td><td>13.00×</td><td>7.69%</td><td>2.44%</td><td>安全边际更高，但不能忽略国家风险</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-heading">
+            <div>
+              <span class="section-eyebrow">Trade-offs</span>
+              <h2>便宜值得倾斜，但不值得孤注一掷</h2>
+            </div>
+            <p class="section-note">价格只是风险的一部分；波动、盈利质量、政策、货币和行业结构同样决定长期体验。</p>
+          </div>
+          <div class="decision-grid">
+            <article class="decision-card">
+              <h3>为什么不把全球继续降到30%以下</h3>
+              <p>ACWI覆盖47个市场和2461家公司。即使估值较高，它仍是组合中最重要的地域与货币分散工具；完全等待低估值，可能长期错过盈利增长。</p>
+            </article>
+            <article class="decision-card">
+              <h3>为什么中国也不直接加到50%</h3>
+              <p>MSCI China十年年化波动约23.85%，显著高于ACWI的14.74%。估值折价部分来自更高的盈利、政策和地缘风险，不是无风险套利。</p>
+            </article>
+            <article class="decision-card">
+              <h3>为什么加入两类红利因子</h3>
+              <p>红利低波侧重防守，红利质量侧重持续盈利；各5%能改善风格分散，但不会让银行、能源或单一质量风格主导整个组合。</p>
+            </article>
+            <article class="decision-card">
+              <h3>为什么保持70%权益</h3>
+              <p>十年以上资金需要足够的增长资产，但组合必须能承受约30%的阶段回撤。若实际承受不了，应降低总权益，而不是只在国家之间换仓。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-heading">
+            <div>
+              <span class="section-eyebrow">Decision Process</span>
+              <h2>从数据到权重，只经过四步</h2>
+            </div>
+            <p class="section-note">不根据单月行情调整；每年复核一次，优先用新增资金纠偏。</p>
+          </div>
+          <div class="decision-flow">
+            <article class="decision-step"><span>01</span><strong>先定风险预算</strong><p>70%权益决定主要回撤，30%防守资产提供缓冲。</p></article>
+            <article class="decision-step"><span>02</span><strong>再做地域分散</strong><p>全球40%、中国及港股30%，避免单一市场决定结果。</p></article>
+            <article class="decision-step"><span>03</span><strong>用估值微调</strong><p>全球估值更高，因此少配5%；中国更便宜，因此多配5%。</p></article>
+            <article class="decision-step"><span>04</span><strong>用纪律收尾</strong><p>固定月投、年度再平衡，不因新闻改变长期框架。</p></article>
+          </div>
+
+          <div class="sources">
+            <a href="https://www.msci.com/documents/10199/255599/msci-acwi.pdf" target="_blank" rel="noreferrer">MSCI ACWI：估值、国家和行业权重</a>
+            <a href="https://www.msci.com/indexes/index/302400/msci-china-index" target="_blank" rel="noreferrer">MSCI China：估值与风险数据</a>
+            <a href="https://oss-ch.csindex.com.cn/static/html/csindex/public/uploads/indices/detail/files/zh_CN/000510factsheet.pdf" target="_blank" rel="noreferrer">中证A500指数事实表</a>
+            <a href="https://oss-ch.csindex.com.cn/static/html/csindex/public/uploads/indices/detail/files/zh_CN/930955factsheet.pdf" target="_blank" rel="noreferrer">中证红利低波动100指数事实表</a>
+            <a href="https://oss-ch.csindex.com.cn/static/html/csindex/public/uploads/indices/detail/files/zh_CN/932315factsheet.pdf" target="_blank" rel="noreferrer">中证全指红利质量指数事实表</a>
+          </div>
+        </section>
+      </div>
     </main>
 
     <footer>
@@ -613,7 +787,7 @@
         id: 'global',
         name: '全球股票宽基',
         role: '长期增长核心',
-        weight: 45,
+        weight: 40,
         kind: 'equity',
         color: '#194c3a',
         overseas: 'VWRA / VT',
@@ -634,10 +808,34 @@
         domesticNote: '中证A500ETF；与沪深300二选一，不需要同时重仓。'
       },
       {
+        id: 'dividendLow',
+        name: 'A股红利低波',
+        role: '价值与低波动因子',
+        weight: 5,
+        kind: 'equity',
+        color: '#7f955c',
+        overseas: 'A股红利低波工具',
+        domestic: '跟踪 930955 的 ETF / 联接',
+        overseasNote: '优先连续分红、高股息并带低波筛选的指数，不追逐单只高息股。',
+        domesticNote: '比较规模、成交额、费率和跟踪误差；同类产品只选一只。'
+      },
+      {
+        id: 'dividendQuality',
+        name: 'A股红利质量',
+        role: '盈利质量因子',
+        weight: 5,
+        kind: 'equity',
+        color: '#b38b58',
+        overseas: 'A股红利质量工具',
+        domestic: '跟踪 932315 的 ETF / 联接',
+        overseasNote: '质量因子波动高于红利低波，仅作为5%的风格补充。',
+        domesticNote: '指数正式历史较短，不按回测收益外推未来；执行前核对产品规模和流动性。'
+      },
+      {
         id: 'hongkong',
         name: '港股中国宽基',
         role: '港股估值与行业补充',
-        weight: 10,
+        weight: 5,
         kind: 'equity',
         color: '#a96d51',
         overseas: '2828.HK',
@@ -731,6 +929,28 @@
       `).join('');
     }
 
+    function selectView(view, updateUrl = false) {
+      const selectedPanel = `${view}Panel`;
+      document.querySelectorAll('.view-button').forEach((button) => {
+        const selected = button.dataset.view === view;
+        button.setAttribute('aria-selected', String(selected));
+        button.tabIndex = selected ? 0 : -1;
+      });
+      document.querySelectorAll('.view-panel').forEach((panel) => {
+        panel.classList.toggle('active', panel.id === selectedPanel);
+      });
+      if (updateUrl) {
+        history.replaceState(null, '', view === 'logic' ? '#logic' : '#plan');
+      }
+    }
+
+    document.querySelectorAll('.view-button').forEach((button) => {
+      button.addEventListener('click', () => selectView(button.dataset.view, true));
+    });
+    document.querySelectorAll('.hero-actions a').forEach((link) => {
+      link.addEventListener('click', () => selectView('plan'));
+    });
+
     document.getElementById('monthlyAmount').addEventListener('input', renderAllocation);
     document.querySelectorAll('.preset').forEach((button) => {
       button.addEventListener('click', () => {
@@ -760,6 +980,7 @@
     renderAllocation();
     renderInstruments('overseas');
     renderInstruments('domestic');
+    selectView(location.hash === '#logic' ? 'logic' : 'plan');
   </script>
 </body>
 </html>

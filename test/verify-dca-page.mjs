@@ -24,6 +24,12 @@ assert.match(source, /function selectView\(/, "top-level tab interaction is miss
 assert.match(source, /A股红利低波/, "dividend low-volatility allocation is missing");
 assert.match(source, /A股红利质量/, "dividend quality allocation is missing");
 
+const domesticTabPosition = source.indexOf('data-channel="domestic"');
+const overseasTabPosition = source.indexOf('data-channel="overseas"');
+assert.ok(domesticTabPosition !== -1 && domesticTabPosition < overseasTabPosition, "domestic account tab must appear first");
+assert.match(source, /aria-selected="true" data-channel="domestic"/, "domestic account tab must be selected by default");
+assert.match(source, /id="domestic" class="channel-panel active"/, "domestic account panel must be open by default");
+
 const allocationBlock = source.match(/const allocation = \[([\s\S]*?)\n    \];/)?.[1] ?? "";
 const weights = [...allocationBlock.matchAll(/\bweight:\s*(\d+)/g)].map((match) => Number(match[1]));
 assert.equal(weights.reduce((total, weight) => total + weight, 0), 100, "allocation weights must total 100%");

@@ -28,7 +28,9 @@
     "yamljs": "^0.3.0"
   },
   "scripts": {
+    "build": "hexo clean && hexo generate",
     "start": "hexo clean && hexo s",
+    "test:dca": "node test/verify-dca-page.mjs",
     "deploy": "hexo clean && hexo generate && hexo deploy && node ./comment.js"
   },
   "devDependencies": {}

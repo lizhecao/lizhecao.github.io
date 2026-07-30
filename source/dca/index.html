@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>中外长期定投组合</title>
+  <meta name="description" content="不考虑现有持仓的中外长期定投组合：全球股票、中国宽基、人民币短债、黄金与现金">
+  <style>
+    :root {
+      --ink: #15231e;
+      --muted: #65736d;
+      --paper: #f3f0e8;
+      --card: #fffdf8;
+      --line: #d9d5ca;
+      --green: #194c3a;
+      --green-2: #39765d;
+      --lime: #a8c98d;
+      --gold: #c4933f;
+      --blue: #5f8290;
+      --clay: #a96d51;
+      --cream: #e7dfcc;
+      --red: #9f4a3e;
+      --shadow: 0 18px 60px rgba(36, 47, 41, .08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% -8%, rgba(168, 201, 141, .28), transparent 31rem),
+        radial-gradient(circle at 94% 20%, rgba(196, 147, 63, .15), transparent 28rem),
+        var(--paper);
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    }
+    button, input { font: inherit; }
+    a { color: inherit; }
+
+    .shell { width: min(1240px, calc(100% - 40px)); margin: 0 auto; }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      min-height: 76px;
+      border-bottom: 1px solid rgba(21, 35, 30, .14);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 820; letter-spacing: -.02em; }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      color: #fff;
+      background: var(--green);
+      border-radius: 50%;
+      font-family: Georgia, serif;
+      font-size: 18px;
+    }
+    .nav-meta { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 253, 248, .65);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(340px, .7fr);
+      gap: 50px;
+      padding: 72px 0 56px;
+      align-items: center;
+    }
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .kicker::before { content: ""; width: 28px; height: 2px; background: var(--green); }
+    h1 {
+      max-width: 780px;
+      margin: 18px 0 20px;
+      font-family: Georgia, "Songti SC", serif;
+      font-size: clamp(46px, 6vw, 78px);
+      line-height: .98;
+      font-weight: 620;
+      letter-spacing: -.045em;
+    }
+    .hero-copy { max-width: 700px; margin: 0; color: var(--muted); font-size: 17px; line-height: 1.8; }
+    .hero-copy strong { color: var(--ink); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 10px 18px;
+      border: 1px solid var(--green);
+      border-radius: 12px;
+      color: #fff;
+      background: var(--green);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .button.secondary { color: var(--green); background: transparent; }
+    .button:focus-visible, .channel-button:focus-visible, .preset:focus-visible, .scenario-button:focus-visible {
+      outline: 3px solid rgba(95, 130, 144, .45);
+      outline-offset: 3px;
+    }
+
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      padding: 30px;
+      color: #f6f4ed;
+      background: var(--green);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+    }
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      bottom: -90px;
+      width: 230px;
+      height: 230px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 50%;
+      box-shadow: 0 0 0 32px rgba(255,255,255,.04), 0 0 0 64px rgba(255,255,255,.03);
+    }
+    .hero-card-label { color: rgba(255,255,255,.67); font-size: 12px; font-weight: 750; }
+    .hero-card-value { margin-top: 12px; font-size: 46px; font-weight: 850; letter-spacing: -.04em; }
+    .hero-card-value small { font-size: 18px; font-weight: 650; }
+    .hero-card-copy { position: relative; z-index: 1; margin: 16px 0 0; color: rgba(255,255,255,.76); font-size: 13px; line-height: 1.7; }
+    .hero-stats { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 28px; background: rgba(255,255,255,.16); }
+    .hero-stat { padding: 16px 12px 12px 0; background: var(--green); }
+    .hero-stat strong { display: block; font-size: 21px; }
+    .hero-stat span { color: rgba(255,255,255,.62); font-size: 11px; }
+
+    .section { padding: 42px 0; }
+    .section-heading { display: grid; grid-template-columns: 1fr minmax(260px, .58fr); gap: 36px; align-items: end; margin-bottom: 24px; }
+    .section-eyebrow { color: var(--clay); font-size: 11px; font-weight: 850; letter-spacing: .14em; text-transform: uppercase; }
+    h2 { margin: 9px 0 0; font-family: Georgia, "Songti SC", serif; font-size: clamp(30px, 4vw, 45px); line-height: 1.08; letter-spacing: -.035em; }
+    .section-note { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+
+    .planner {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(360px, .8fr);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .planner-main { padding: 28px; border-right: 1px solid var(--line); }
+    .amount-control { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 24px; }
+    .amount-control label { display: block; color: var(--muted); font-size: 11px; font-weight: 760; }
+    .amount-input-wrap { display: flex; align-items: center; margin-top: 7px; }
+    .currency { color: var(--muted); font-size: 22px; }
+    #monthlyAmount {
+      width: 190px;
+      padding: 0 8px;
+      border: 0;
+      border-bottom: 2px solid var(--ink);
+      outline: 0;
+      color: var(--ink);
+      background: transparent;
+      font-size: 32px;
+      font-weight: 820;
+      font-variant-numeric: tabular-nums;
+    }
+    .presets { display: flex; flex-wrap: wrap; gap: 7px; }
+    .preset {
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      background: #fff;
+      font-size: 11px;
+      font-weight: 760;
+      cursor: pointer;
+    }
+    .preset:hover { color: var(--green); border-color: var(--green); }
+    .allocation-table { width: 100%; border-collapse: collapse; }
+    .allocation-table th { padding: 10px 8px; color: var(--muted); border-bottom: 1px solid var(--line); text-align: left; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+    .allocation-table th:last-child, .allocation-table td:last-child { text-align: right; }
+    .allocation-table td { padding: 15px 8px; border-bottom: 1px solid rgba(217,213,202,.7); font-size: 13px; }
+    .allocation-table tr:last-child td { border-bottom: 0; }
+    .asset-name { display: flex; align-items: center; gap: 10px; font-weight: 780; }
+    .asset-dot { width: 9px; height: 9px; border-radius: 3px; }
+    .weight { color: var(--green); font-weight: 850; font-variant-numeric: tabular-nums; }
+    .amount { font-size: 15px; font-weight: 820; font-variant-numeric: tabular-nums; }
+
+    .planner-side { display: grid; align-content: center; justify-items: center; padding: 30px; }
+    .donut {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--green) 0 45%,
+        var(--green-2) 45% 60%,
+        var(--clay) 60% 70%,
+        var(--blue) 70% 85%,
+        var(--gold) 85% 95%,
+        var(--cream) 95% 100%
+      );
+      box-shadow: inset 0 0 0 1px rgba(21,35,30,.08);
+    }
+    .donut::after {
+      content: "";
+      position: absolute;
+      inset: 47px;
+      border-radius: 50%;
+      background: var(--card);
+      box-shadow: 0 0 0 1px var(--line);
+    }
+    .donut-center { position: absolute; inset: 0; z-index: 1; display: grid; place-content: center; text-align: center; }
+    .donut-center strong { font-size: 34px; }
+    .donut-center span { color: var(--muted); font-size: 11px; }
+    .mix-caption { margin-top: 20px; color: var(--muted); font-size: 12px; text-align: center; line-height: 1.6; }
+
+    .market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .market-card { padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,253,248,.72); }
+    .market-card span { color: var(--muted); font-size: 11px; }
+    .market-card strong { display: block; margin: 10px 0 6px; font-family: Georgia, serif; font-size: 30px; }
+    .market-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+    .channel-wrap { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+    .channel-tabs { display: flex; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); background: rgba(231,223,204,.32); }
+    .channel-button {
+      min-height: 38px;
+      padding: 8px 14px;
+      border: 0;
+      border-radius: 9px;
+      color: var(--muted);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .channel-button[aria-selected="true"] { color: #fff; background: var(--green); }
+    .channel-panel { display: none; padding: 4px 24px 18px; }
+    .channel-panel.active { display: block; }
+    .instrument-row {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) minmax(180px, .8fr) minmax(260px, 1.35fr);
+      gap: 22px;
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(217,213,202,.75);
+      align-items: center;
+    }
+    .instrument-row:last-child { border-bottom: 0; }
+    .instrument-role { font-weight: 800; }
+    .instrument-role small { display: block; margin-top: 4px; color: var(--muted); font-weight: 500; }
+    .ticker {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 9px;
+      border-radius: 7px;
+      color: var(--green);
+      background: rgba(168,201,141,.24);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      font-weight: 820;
+    }
+    .instrument-note { color: var(--muted); font-size: 12px; line-height: 1.55; }
+
+    .logic-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .logic-card { padding: 24px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); }
+    .logic-index { display: grid; place-items: center; width: 34px; height: 34px; color: #fff; background: var(--green); border-radius: 50%; font-family: Georgia, serif; }
+    .logic-card h3 { margin: 18px 0 9px; font-size: 16px; }
+    .logic-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.72; }
+
+    .stress {
+      display: grid;
+      grid-template-columns: minmax(280px, .68fr) minmax(0, 1.32fr);
+      gap: 20px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--green);
+      color: #fff;
+    }
+    .stress-copy h3 { margin: 0; font-family: Georgia, "Songti SC", serif; font-size: 31px; }
+    .stress-copy p { margin: 12px 0 0; color: rgba(255,255,255,.66); font-size: 13px; line-height: 1.7; }
+    .scenario-buttons { display: grid; gap: 8px; margin-top: 22px; }
+    .scenario-button {
+      padding: 11px 13px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 9px;
+      color: rgba(255,255,255,.72);
+      background: transparent;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 760;
+      cursor: pointer;
+    }
+    .scenario-button[aria-selected="true"] { color: var(--ink); background: var(--lime); border-color: var(--lime); }
+    .stress-result { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-content: center; }
+    .stress-box { padding: 20px; border: 1px solid rgba(255,255,255,.16); border-radius: 13px; background: rgba(255,255,255,.07); }
+    .stress-box span { color: rgba(255,255,255,.62); font-size: 11px; }
+    .stress-box strong { display: block; margin-top: 9px; font-size: 26px; font-variant-numeric: tabular-nums; }
+    .stress-wide { grid-column: 1 / -1; }
+    .stress-wide p { margin: 9px 0 0; color: rgba(255,255,255,.72); font-size: 12px; line-height: 1.6; }
+
+    .rules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .rule { padding: 20px; border-top: 3px solid var(--clay); background: rgba(255,253,248,.7); }
+    .rule strong { display: block; font-size: 13px; }
+    .rule p { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.62; }
+
+    .warning {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      padding: 20px;
+      border: 1px solid rgba(159,74,62,.25);
+      border-radius: 14px;
+      background: rgba(159,74,62,.07);
+    }
+    .warning-icon { color: var(--red); font-size: 24px; font-weight: 900; }
+    .warning strong { display: block; font-size: 13px; }
+    .warning p { margin: 7px 0 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
+
+    .sources { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px 24px; margin-top: 18px; }
+    .sources a { color: var(--muted); font-size: 11px; line-height: 1.5; text-decoration-color: rgba(21,35,30,.25); }
+    .sources a:hover { color: var(--green); }
+    footer { padding: 34px 0 50px; color: var(--muted); border-top: 1px solid var(--line); font-size: 11px; line-height: 1.65; }
+
+    @media (max-width: 920px) {
+      .hero, .planner, .stress { grid-template-columns: 1fr; }
+      .hero { gap: 26px; padding-top: 48px; }
+      .planner-main { border-right: 0; border-bottom: 1px solid var(--line); }
+      .section-heading { grid-template-columns: 1fr; gap: 12px; }
+      .market-grid { grid-template-columns: 1fr; }
+      .rules { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 680px) {
+      .shell { width: min(100% - 24px, 1240px); }
+      .nav { min-height: 64px; }
+      .nav-meta .pill:first-child { display: none; }
+      h1 { font-size: 45px; }
+      .hero-copy { font-size: 15px; }
+      .hero-card { padding: 24px; border-radius: 22px; }
+      .hero-card-value { font-size: 38px; }
+      .section { padding: 32px 0; }
+      .planner-main, .planner-side { padding: 20px; }
+      .amount-control { align-items: start; flex-direction: column; }
+      #monthlyAmount { width: 160px; }
+      .allocation-table th:nth-child(2), .allocation-table td:nth-child(2) { display: none; }
+      .donut { width: 210px; height: 210px; }
+      .logic-grid, .rules, .stress-result, .sources { grid-template-columns: 1fr; }
+      .instrument-row { grid-template-columns: 1fr; gap: 8px; }
+      .channel-panel { padding-inline: 18px; }
+      .stress-wide { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <nav class="nav" aria-label="主导航">
+      <div class="brand">
+        <span class="brand-mark">D</span>
+        <span>定投组合研究室</span>
+      </div>
+      <div class="nav-meta">
+        <span class="pill">10 年以上 · 中等风险</span>
+        <span class="pill">数据截止 2026-07-30</span>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero">
+        <div>
+          <span class="kicker">Standalone DCA Portfolio</span>
+          <h1>中外长期<br>定投组合</h1>
+          <p class="hero-copy">
+            一套<strong>不考虑现有持仓</strong>的独立配置。用全球股票参与长期增长，以中国宽基保留本土权益，
+            再用人民币短债、黄金和现金控制组合在坏年份里的损伤。
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="#planner">计算每月投入</a>
+            <a class="button secondary" href="#instruments">查看可买标的</a>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="组合概览">
+          <div class="hero-card-label">建议风险结构</div>
+          <div class="hero-card-value">70<small>% 权益</small></div>
+          <p class="hero-card-copy">增长为主，但不把所有风险押在单一国家或单一赛道。默认可承受约 30% 左右的阶段回撤。</p>
+          <div class="hero-stats">
+            <div class="hero-stat"><strong>20%</strong><span>短债 + 现金</span></div>
+            <div class="hero-stat"><strong>10%</strong><span>黄金</span></div>
+            <div class="hero-stat"><strong>1×/年</strong><span>年度再平衡</span></div>
+          </div>
+        </aside>
+      </section>
+
+      <section id="planner" class="section">
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">Allocation</span>
+            <h2>每一笔月供，按同一套纪律分配</h2>
+          </div>
+          <p class="section-note">修改月投金额后，各资产投入会自动计算。金额较小时，可先买场外联接或积累两三个月再买整手 ETF。</p>
+        </div>
+
+        <div class="planner">
+          <div class="planner-main">
+            <div class="amount-control">
+              <div>
+                <label for="monthlyAmount">月投金额</label>
+                <div class="amount-input-wrap">
+                  <span class="currency">¥</span>
+                  <input id="monthlyAmount" type="number" min="100" step="100" value="10000" inputmode="numeric">
+                </div>
+              </div>
+              <div class="presets" aria-label="快捷金额">
+                <button class="preset" type="button" data-value="3000">¥3,000</button>
+                <button class="preset" type="button" data-value="10000">¥10,000</button>
+                <button class="preset" type="button" data-value="30000">¥30,000</button>
+              </div>
+            </div>
+            <table class="allocation-table">
+              <thead>
+                <tr><th>资产</th><th>角色</th><th>权重</th><th>每月投入</th></tr>
+              </thead>
+              <tbody id="allocationRows"></tbody>
+            </table>
+          </div>
+          <div class="planner-side">
+            <div id="allocationChart" class="donut" role="img" aria-label="组合权重环形图">
+              <div class="donut-center"><strong>100%</strong><span>独立组合</span></div>
+            </div>
+            <p class="mix-caption">45% 全球核心 · 25% 中国宽基<br>20% 稳健资产 · 10% 黄金</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">Market Lens</span>
+            <h2>当前能买，但不值得追</h2>
+          </div>
+          <p class="section-note">估值不用于预测下个月涨跌，只用于避免把近期涨得最好的资产误当成未来唯一答案。</p>
+        </div>
+        <div class="market-grid">
+          <article class="market-card">
+            <span>全球股票 · MSCI ACWI</span>
+            <strong>23.5×</strong>
+            <p>2026-04-30 市盈率；全球宽基已不便宜，因此坚持定投，不一次性冲入。</p>
+          </article>
+          <article class="market-card">
+            <span>中国股票 · MSCI China</span>
+            <strong>13.0×</strong>
+            <p>2026-06-30 市盈率；估值更低，但政策、盈利和货币风险仍需分散。</p>
+          </article>
+          <article class="market-card">
+            <span>中国 5 年期国债</span>
+            <strong>1.45%</strong>
+            <p>2026-07-28 到期收益率；债券仓用于稳定和再平衡，不承担高收益目标。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="instruments" class="section">
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">Instruments</span>
+            <h2>同一份配置，两种账户落地</h2>
+          </div>
+          <p class="section-note">海外账户优先低费全球宽基；仅有境内账户时，用场外 QDII/联接减少场内溢价干扰。</p>
+        </div>
+
+        <div class="channel-wrap">
+          <div class="channel-tabs" role="tablist" aria-label="账户类型">
+            <button class="channel-button" type="button" role="tab" aria-selected="true" data-channel="overseas">海外账户</button>
+            <button class="channel-button" type="button" role="tab" aria-selected="false" data-channel="domestic">境内账户</button>
+          </div>
+          <div id="overseas" class="channel-panel active" role="tabpanel"></div>
+          <div id="domestic" class="channel-panel" role="tabpanel"></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">Portfolio Logic</span>
+            <h2>为什么不是“标普 + 纳指 + 恒科”</h2>
+          </div>
+          <p class="section-note">组合需要分散风险来源，而不是用不同代码重复持有相同的大盘科技公司。</p>
+        </div>
+        <div class="logic-grid">
+          <article class="logic-card">
+            <span class="logic-index">1</span>
+            <h3>全球宽基是唯一海外核心</h3>
+            <p>全球基金本身已经大量持有美国龙头。再等权叠加标普和纳指，会让组合重新集中到同一批公司。</p>
+          </article>
+          <article class="logic-card">
+            <span class="logic-index">2</span>
+            <h3>中国配置分成 A 股与港股</h3>
+            <p>A500覆盖更多本土行业，恒生宽基补充港股金融、互联网和消费；两者合计 25%，保留本土机会但不过半。</p>
+          </article>
+          <article class="logic-card">
+            <span class="logic-index">3</span>
+            <h3>短债和现金不是拖累</h3>
+            <p>它们降低被迫在低点卖出的概率，也为年度再平衡提供资金。真正的风险不是少赚一年，而是回撤时退出计划。</p>
+          </article>
+          <article class="logic-card">
+            <span class="logic-index">4</span>
+            <h3>黄金只做分散，不做信仰</h3>
+            <p>黄金没有现金流，价格同样会大幅波动。10% 足以提供不同风险来源，超过目标则通过再平衡卖回。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="stress">
+          <div class="stress-copy">
+            <h3>压力测试</h3>
+            <p>以下是用于检验心理承受力的粗略情景，不是收益预测。点击场景查看组合可能受到的冲击。</p>
+            <div class="scenario-buttons" role="tablist" aria-label="压力情景">
+              <button class="scenario-button" type="button" aria-selected="true" data-scenario="recession">全球衰退</button>
+              <button class="scenario-button" type="button" aria-selected="false" data-scenario="china">中国资产单独大跌</button>
+              <button class="scenario-button" type="button" aria-selected="false" data-scenario="rates">利率与通胀冲击</button>
+            </div>
+          </div>
+          <div class="stress-result">
+            <div class="stress-box">
+              <span>组合影响区间</span>
+              <strong id="stressRange">-27% ~ -34%</strong>
+            </div>
+            <div class="stress-box">
+              <span>主要受损资产</span>
+              <strong id="stressDriver">全球权益</strong>
+            </div>
+            <div class="stress-box stress-wide">
+              <span>应对原则</span>
+              <p id="stressAction">继续月供，以短债和现金执行年度再平衡；若无法接受 30% 左右回撤，应在开始前把权益降至 55%—60%。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">Discipline</span>
+            <h2>决定结果的不是选基，而是执行</h2>
+          </div>
+          <p class="section-note">把规则预先写清，行情剧烈波动时不临时发明新策略。</p>
+        </div>
+        <div class="rules">
+          <article class="rule"><strong>固定日期月投</strong><p>每月同一天执行，不因新闻、涨跌或预测停扣。</p></article>
+          <article class="rule"><strong>QDII 溢价纪律</strong><p>场内价格较 IOPV/NAV 溢价超过 1% 暂停，改买场外联接或进入货基。</p></article>
+          <article class="rule"><strong>年度再平衡</strong><p>每年一次；单项偏离目标 5 个百分点时，优先用新增资金纠正。</p></article>
+          <article class="rule"><strong>主题仓上限</strong><p>纳指、恒科、AI、半导体等卫星仓合计不超过 5%，且从全球宽基中替换。</p></article>
+        </div>
+
+        <div class="warning" style="margin-top: 18px;">
+          <div class="warning-icon">!</div>
+          <div>
+            <strong>这不是保本组合</strong>
+            <p>70% 权益意味着组合仍可能出现约 30% 的阶段回撤。应急金应独立保留 6—12 个月支出；五年内确定要用的钱不进入该组合。美国注册 ETF 还涉及非美国居民股息预扣税及美国遗产税申报问题，长期大额持有前应按个人税务身份确认。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">Sources</span>
+            <h2>数据与产品资料</h2>
+          </div>
+          <p class="section-note">优先引用指数公司、交易所、基金公司和监管机构资料。数据会变化，执行前需再次核对。</p>
+        </div>
+        <div class="sources">
+          <a href="https://corporate.vanguard.com/content/corporatesite/us/en/corp/vemo/vemo-return-forecasts.html" target="_blank" rel="noreferrer">Vanguard 2026-06-30 长期回报预测</a>
+          <a href="https://www.msci.com/documents/10199/255599/msci-acwi.pdf" target="_blank" rel="noreferrer">MSCI ACWI 指数事实表</a>
+          <a href="https://www.msci.com/indexes/index/302400/msci-china-index" target="_blank" rel="noreferrer">MSCI China 指数数据</a>
+          <a href="https://www.sse.com.cn/disclosure/fund/announcement/c/new/2026-05-29/512050_20260529_7LIV.pdf" target="_blank" rel="noreferrer">中证A500ETF 512050 产品概要</a>
+          <a href="https://yield.chinabond.com.cn/cbweb-czb-web/czb/moreInfo?locale=cn_ZH&nameType=1" target="_blank" rel="noreferrer">中国国债收益率曲线</a>
+          <a href="https://www.gold.org/goldhub/research/relevance-of-gold-as-a-strategic-asset/portfolio-impact" target="_blank" rel="noreferrer">世界黄金协会：黄金对组合风险收益的影响</a>
+          <a href="https://www.vanguard.co.uk/professional/product/etf/equity/9679/ftse-all-world-ucits-etf-accumulating" target="_blank" rel="noreferrer">Vanguard FTSE All-World UCITS ETF</a>
+          <a href="https://www.irs.gov/individuals/international-taxpayers/some-nonresidents-with-us-assets-must-file-estate-tax-returns" target="_blank" rel="noreferrer">美国 IRS：非居民美国资产遗产税说明</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      本页面为组合研究与教育用途，不构成个性化投资、法律或税务建议。指数历史表现、估值和模型预测均不保证未来收益。
+    </footer>
+  </div>
+
+  <script>
+    const allocation = [
+      {
+        id: 'global',
+        name: '全球股票宽基',
+        role: '长期增长核心',
+        weight: 45,
+        kind: 'equity',
+        color: '#194c3a',
+        overseas: 'VWRA / VT',
+        domestic: '全球或标普500场外QDII联接',
+        overseasNote: '优先爱尔兰积累型 VWRA；只能买美股时用 VT。',
+        domesticNote: '境内缺少理想的一只全球宽基，优先场外联接，避免高溢价场内 ETF。'
+      },
+      {
+        id: 'a500',
+        name: '中国A股宽基',
+        role: '本土行业分散',
+        weight: 15,
+        kind: 'equity',
+        color: '#39765d',
+        overseas: 'ASHR / A股通工具',
+        domestic: '512050',
+        overseasNote: '若海外工具费用较高，可直接在境内账户配置。',
+        domesticNote: '中证A500ETF；与沪深300二选一，不需要同时重仓。'
+      },
+      {
+        id: 'hongkong',
+        name: '港股中国宽基',
+        role: '港股估值与行业补充',
+        weight: 10,
+        kind: 'equity',
+        color: '#a96d51',
+        overseas: '2828.HK',
+        domestic: '159920',
+        overseasNote: '恒生国企或恒生宽基，不用恒生科技替代核心。',
+        domesticNote: '华夏恒生ETF；下单前仍需检查折溢价。'
+      },
+      {
+        id: 'bonds',
+        name: '人民币短债',
+        role: '稳定与再平衡资金',
+        weight: 15,
+        kind: 'defensive',
+        color: '#5f8290',
+        overseas: '人民币短债基金',
+        domestic: '短债基金 / 511360',
+        overseasNote: '人民币负债对应人民币稳健资产，不强行换成美元债。',
+        domesticNote: '511360 含信用风险；小额定投优先低费场外短债基金。'
+      },
+      {
+        id: 'gold',
+        name: '黄金',
+        role: '尾部风险分散',
+        weight: 10,
+        kind: 'alternative',
+        color: '#c4933f',
+        overseas: 'GLDM',
+        domestic: '518880',
+        overseasNote: '实物黄金敞口，费用低于大型 GLD。',
+        domesticNote: '流动性较好，但费率高于海外同类产品。'
+      },
+      {
+        id: 'cash',
+        name: '现金 / 货币基金',
+        role: '流动性缓冲',
+        weight: 5,
+        kind: 'defensive',
+        color: '#e7dfcc',
+        overseas: '货币基金 / 短期存款',
+        domestic: '货币基金 / 存款',
+        overseasNote: '不为多赚一点收益承担不必要的久期和信用风险。',
+        domesticNote: '组合现金不等于应急金；应急金需另行保留。'
+      }
+    ];
+
+    const scenarios = {
+      recession: {
+        range: '-27% ~ -34%',
+        driver: '全球权益',
+        action: '继续月供，以短债和现金执行年度再平衡；若无法接受 30% 左右回撤，应在开始前把权益降至 55%—60%。'
+      },
+      china: {
+        range: '-12% ~ -18%',
+        driver: '中国宽基',
+        action: '维持全球核心权重，不用新增资金继续摊薄单一中国主题；按既定比例补足跌破目标的中国宽基。'
+      },
+      rates: {
+        range: '-10% ~ -20%',
+        driver: '股票与黄金',
+        action: '短债比长债更抗利率上行；不要把短期通胀冲击变成追逐商品或清仓权益的理由。'
+      }
+    };
+
+    const formatCurrency = (value) => new Intl.NumberFormat('zh-CN', {
+      style: 'currency',
+      currency: 'CNY',
+      maximumFractionDigits: 0
+    }).format(value);
+
+    function renderAllocation() {
+      const monthly = Math.max(0, Number(document.getElementById('monthlyAmount').value) || 0);
+      const rows = document.getElementById('allocationRows');
+      rows.innerHTML = allocation.map((item) => `
+        <tr>
+          <td><span class="asset-name"><i class="asset-dot" style="background:${item.color}"></i>${item.name}</span></td>
+          <td>${item.role}</td>
+          <td class="weight">${item.weight}%</td>
+          <td class="amount">${formatCurrency(monthly * item.weight / 100)}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderInstruments(channel) {
+      const panel = document.getElementById(channel);
+      panel.innerHTML = allocation.map((item) => `
+        <div class="instrument-row">
+          <div class="instrument-role">${item.name}<small>${item.weight}% · ${item.role}</small></div>
+          <div><span class="ticker">${item[channel]}</span></div>
+          <div class="instrument-note">${item[`${channel}Note`]}</div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('monthlyAmount').addEventListener('input', renderAllocation);
+    document.querySelectorAll('.preset').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.getElementById('monthlyAmount').value = button.dataset.value;
+        renderAllocation();
+      });
+    });
+
+    document.querySelectorAll('.channel-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        const channel = button.dataset.channel;
+        document.querySelectorAll('.channel-button').forEach((item) => item.setAttribute('aria-selected', String(item === button)));
+        document.querySelectorAll('.channel-panel').forEach((panel) => panel.classList.toggle('active', panel.id === channel));
+      });
+    });
+
+    document.querySelectorAll('.scenario-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        const scenario = scenarios[button.dataset.scenario];
+        document.querySelectorAll('.scenario-button').forEach((item) => item.setAttribute('aria-selected', String(item === button)));
+        document.getElementById('stressRange').textContent = scenario.range;
+        document.getElementById('stressDriver').textContent = scenario.driver;
+        document.getElementById('stressAction').textContent = scenario.action;
+      });
+    });
+
+    renderAllocation();
+    renderInstruments('overseas');
+    renderInstruments('domestic');
+  </script>
+</body>
+</html>

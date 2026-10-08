@@ -13,7 +13,7 @@ const assert=require('node:assert/strict');
  await page.locator('#more-models').click();assert.equal(await page.locator('.model-card').count(),12);
  await page.locator('#model-search').fill('皇家四塔城堡');
  await page.locator('[data-model="royalfort"]').click();
- await page.locator('#next').click();
+ await page.locator('#next').click();if(await page.locator('#zoom-dialog').evaluate(el=>el.open))await page.locator('#zoom-close').click();
  assert.equal(await page.evaluate(()=>current),1);
  await page.locator('#layer-view').click();assert.match(await page.locator('#stage').textContent(),/从上往下看/);
  await page.locator('#stage').click();assert.equal(await page.locator('#zoom-dialog').evaluate(el=>el.open),true);
@@ -35,7 +35,7 @@ const assert=require('node:assert/strict');
   await page.locator('#restart').click();
   assert.ok(await page.locator('#step-content a[href*="xiaohongshu"]').count());
   for(let i=1;i<=m.steps;i++) {
-   await page.locator('#next').click();
+   await page.locator('#next').click();if(await page.locator('#zoom-dialog').evaluate(el=>el.open))await page.locator('#zoom-close').click();
    assert.equal(await page.evaluate(()=>current),i);
    assert.ok(await page.locator('#stage svg').count());
    if(await page.evaluate(()=>model.steps[current-1].pieces[0].kind==='curve')) {
@@ -56,7 +56,7 @@ const assert=require('node:assert/strict');
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
  await context.setOffline(true);await page.reload();
  assert.equal(await page.evaluate(()=>MODELS.length),44);
- const offlineStep=await page.evaluate(()=>current);await page.locator('#restart').click();await page.locator('#next').click();assert.equal(await page.evaluate(()=>current),1);
+ const offlineStep=await page.evaluate(()=>current);await page.locator('#restart').click();await page.locator('#next').click();if(await page.locator('#zoom-dialog').evaluate(el=>el.open))await page.locator('#zoom-close').click();assert.equal(await page.evaluate(()=>current),1);
  const swScope=await page.evaluate(async()=>(await navigator.serviceWorker.getRegistration()).scope);
  assert.equal(swScope,base);
  assert.deepEqual(errors,[]);

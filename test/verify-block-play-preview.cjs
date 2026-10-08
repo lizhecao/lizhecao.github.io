@@ -1,0 +1,46 @@
+const {chromium}=require('playwright');
+const assert=require('node:assert/strict');
+(async()=>{
+ const browser=await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox']});
+ const context=await browser.newContext({viewport:{width:390,height:844}});
+ const page=await context.newPage();const errors=[];page.on('pageerror',error=>errors.push(error.message));
+ await page.goto(process.argv[2]||'http://127.0.0.1:8765/block-play/');
+ await page.waitForFunction(()=>window.blockPlayPWA?.getState().offlineReady);
+ for(const id of ['ref-bus','royalfort']){
+  await page.locator('#model-search').fill(id==='ref-bus'?'双层巴士':'皇家四塔城堡');
+  await page.locator('[data-model="'+id+'"]').click();
+  await page.locator('#restart').click();await page.locator('#next').click();
+  const total=await page.evaluate(()=>model.steps.length);
+  assert.equal(await page.locator('#finished-preview [data-part]').count(),total);
+  assert.equal(await page.locator('#stage [data-part]').count(),1);
+  const frame=await page.locator('#stage-view').boundingBox();
+  const thumb=await page.locator('#finished-preview').boundingBox();
+  assert.ok(thumb.x+thumb.width<=frame.x+frame.width+1 && thumb.x>frame.x+frame.width/2);
+  assert.ok(thumb.y>=frame.y && thumb.y<frame.y+16);
+  await page.locator('#layer-view').click();
+  await page.locator('#finished-preview').click();
+  assert.equal(await page.locator('#finished-preview').getAttribute('aria-pressed'),'true');
+  assert.equal(await page.evaluate(()=>current),1);
+  assert.equal(await page.locator('#stage [data-part]').count(),total,'preview must show the full model even with layer view enabled');
+  assert.equal(await page.locator('#zoom-dialog').evaluate(element=>element.open),false);
+  await page.locator('#finished-preview').click();
+  assert.match(await page.locator('#stage').textContent(),/从上往下看/);
+  await page.locator('#stage').click();
+  assert.equal(await page.locator('#zoom-finished-preview [data-part]').count(),total);
+  await page.locator('#zoom-finished-preview').click();
+  assert.equal(await page.locator('#zoom-stage [data-part]').count(),total);
+  assert.equal(await page.evaluate(()=>current),1);
+  await page.locator('#zoom-finished-preview').click();
+  assert.match(await page.locator('#zoom-stage').textContent(),/从上往下看/);
+  await page.locator('#zoom-close').click();
+ }
+ await page.setViewportSize({width:1280,height:900});
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+ await context.setOffline(true);await page.reload();
+ await page.locator('#next').click();await page.locator('#finished-preview').click();
+ assert.equal(await page.evaluate(()=>preview),true);
+ assert.equal(await page.locator('#stage [data-part]').count(),await page.evaluate(()=>model.steps.length));
+ assert.deepEqual(errors,[]);
+ console.log('PASS: normal and fullscreen thumbnails, correct model, full preview from layer view, unchanged progress, desktop/mobile placement and offline use');
+ await browser.close();
+})().catch(error=>{console.error(error);process.exit(1)});

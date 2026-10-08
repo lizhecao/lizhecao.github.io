@@ -45,7 +45,27 @@ const assert=require('node:assert/strict');
  await page.locator('#next').click();await page.locator('#finished-preview').click();
  assert.equal(await page.evaluate(()=>preview),true);
  assert.equal(await page.locator('#stage [data-part]').count(),await page.evaluate(()=>model.steps.length));
+ const tablet=await browser.newContext({viewport:{width:768,height:1024},isMobile:true,hasTouch:true});
+ const tabletPage=await tablet.newPage();
+ await tabletPage.goto(process.argv[2]||'http://127.0.0.1:8765/block-play/');
+ await tabletPage.locator('#model-search').fill('皇家四塔城堡');
+ await tabletPage.locator('[data-model="royalfort"]').click();
+ await tabletPage.locator('#next').click();
+ for(const viewport of [{width:768,height:1024},{width:1024,height:768},{width:1194,height:834}]){
+  await tabletPage.setViewportSize(viewport);
+  const image=await tabletPage.locator('#stage svg').boundingBox();
+  assert.ok(image.height>=500,'iPad main drawing must be enlarged');
+  assert.ok(image.width>=viewport.width*.72,'iPad main drawing must span the lesson width');
+  const thumbnail=await tabletPage.locator('#finished-preview').boundingBox();
+  const stage=await tabletPage.locator('#stage').boundingBox();
+  assert.ok(stage.y>=thumbnail.y+thumbnail.height,'iPad preview must not cover the main drawing');
+  assert.equal(await tabletPage.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  await tabletPage.locator('#finished-preview').click();
+  assert.equal(await tabletPage.evaluate(()=>current),1);
+  await tabletPage.locator('#finished-preview').click();
+ }
+ await tablet.close();
  assert.deepEqual(errors,[]);
- console.log('PASS: normal and fullscreen thumbnails, correct model, full preview from layer view, unchanged progress, desktop/mobile placement and offline use');
+ console.log('PASS: normal and fullscreen thumbnails, correct model, full preview from layer view, unchanged progress, desktop/mobile placement, larger iPad drawings in both orientations and offline use');
  await browser.close();
 })().catch(error=>{console.error(error);process.exit(1)});

@@ -8,7 +8,7 @@ const manifest = JSON.parse(await readFile(new URL("manifest.webmanifest", root)
 assert.equal(manifest.start_url, "./");
 assert.equal(manifest.scope, "./");
 const html = await readFile(new URL("index.html", root), "utf8");
-assert.match(html, /32 个创意造型/);
+assert.match(html, /44 个创意造型/);
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
 assert.equal(new Set(ids).size, ids.length, "HTML IDs must be unique");
 const files = new Set(["index.html", "sw.js", ...manifest.icons.map(icon => icon.src)]);

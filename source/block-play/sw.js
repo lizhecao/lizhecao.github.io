@@ -1,6 +1,6 @@
 /* All paths resolve against the service worker scope, including GitHub Pages subdirectories. */
 const CACHE_PREFIX = 'block-play-offline-' + encodeURIComponent(new URL(self.registration.scope).pathname) + '-';
-const CACHE_NAME = CACHE_PREFIX + '20261008-v7';
+const CACHE_NAME = CACHE_PREFIX + '20261008-v8';
 const CORE = [
   './', './index.html', './style.css', './app.js', './patterns.js', './pwa.js',
   './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png',
@@ -59,6 +59,6 @@ self.addEventListener('message', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
     const matches = await Promise.all(CORE.map(url => cache.match(url)));
-    event.ports[0].postMessage({ version: '20261008-v7', offlineReady: matches.every(Boolean) });
+    event.ports[0].postMessage({ version: '20261008-v8', offlineReady: matches.every(Boolean) });
   })());
 });

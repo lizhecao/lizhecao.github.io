@@ -60,7 +60,7 @@
         channel.port1.onmessage = event => {clearTimeout(timer);channel.port1.close();resolve(event.data);};
         active.postMessage({ type: 'CHECK_OFFLINE' }, [channel.port2]);
       });
-      if (result.version !== '20261009-v11' || !result.offlineReady) throw new Error('offline files incomplete');
+      if (result.version !== '20261009-v12' || !result.offlineReady) throw new Error('offline files incomplete');
       state.offlineReady = true;
       publish();
     } catch (error) {

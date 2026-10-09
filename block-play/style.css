@@ -12,3 +12,5 @@
 @media(min-width:541px) and (max-width:1366px) and (any-pointer:coarse){.lesson-grid{grid-template-columns:minmax(0,1fr)}.stage svg{height:clamp(500px,65vw,760px)}}
 
 .lab-visual{align-self:start}.lab-story{margin:18px 0;padding:20px;border:1px solid #e6d8b8;border-radius:18px;background:#fff9ed}.lab-story h4{margin:8px 0 12px}.story-icon{font-size:28px;letter-spacing:6px}.story-progress{font-size:13px;color:#71634d}.story-scene{min-height:230px}.story-task{padding:12px;background:#fff;border-radius:12px}.story-controls{display:flex;gap:12px;justify-content:space-between}.story-controls button{min-height:44px}.story-controls button:disabled{opacity:.4;cursor:default}.lab-story a{color:#496856;text-decoration:underline}@media(max-width:540px){.lab-story{padding:16px}.story-scene{min-height:280px}}
+
+.scene-sections{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.scene-sections[hidden],#complete-banner[hidden],#big-banner[hidden]{display:none}.scene-sections button.active{background:#245945;color:#fff}.scene-sections button{min-height:44px}#zoom-scene-sections{flex-shrink:0}

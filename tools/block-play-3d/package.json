@@ -1,0 +1,7 @@
+{
+  "name": "block-play-3d-vendor-build",
+  "private": true,
+  "type": "module",
+  "scripts": {"build": "node build.mjs"},
+  "devDependencies": {"esbuild": "0.28.2", "three": "0.186.1"}
+}

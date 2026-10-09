@@ -1,0 +1,47 @@
+const {chromium}=require('playwright'),assert=require('node:assert/strict');
+const closeCamera=(a,b)=>{for(const key of ['position','target'])a[key].forEach((v,i)=>assert.ok(Math.abs(v-b[key][i])<1e-8));assert.ok(Math.abs(a.zoom-b.zoom)<1e-8);};
+const url=process.argv[2]||'http://127.0.0.1:8765/block-play/';
+(async()=>{
+ const browser=await chromium.launch({executablePath:process.env.CHROME_PATH,args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+ const context=await browser.newContext({viewport:{width:1024,height:768},hasTouch:true});
+ const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(url);await page.waitForFunction(()=>window.blockPlayPWA?.getState().offlineReady);
+ // Offline-ready must include a viewer never opened during this session.
+ await context.setOffline(true);
+ await page.locator('[data-filter="complete"]').click();await page.locator('[data-model="scene-courtyard-home"]').click();
+ await page.evaluate(()=>move(2));const saved=await page.evaluate(()=>localStorage.getItem('block-lab-progress-v4'));
+ await page.locator('.scene-toolbar:not([hidden]) [data-scene-toggle]').first().click();
+ await page.waitForSelector('#stage-view canvas',{timeout:15000});
+ assert.equal(await page.locator('canvas').count(),1);
+ await page.locator('#finished-preview').click();await page.locator('#scene-sections [data-section="second"]').click();
+ assert.ok(Number(await page.locator('canvas').getAttribute('data-parts'))>6);
+ assert.ok(await page.locator('button[data-object="second-bed"]').count());
+ await page.locator('[data-scene-walls]').first().click();assert.equal(await page.evaluate(()=>previewOpenWalls),false);
+ await page.locator('button[data-object="second-bed"]').click();assert.match(await page.locator('.scene-object-detail').textContent(),/床/);
+ const state=await page.evaluate(()=>window.blockScene.viewer.snapshot());
+ const box=await page.locator('canvas').boundingBox();assert.ok(box.width>650&&box.height>=500);
+ await page.mouse.move(box.x+box.width*.5,box.y+box.height*.5);await page.mouse.down();await page.mouse.move(box.x+box.width*.7,box.y+box.height*.6,{steps:12});await page.mouse.up();
+ assert.notDeepEqual(await page.evaluate(()=>window.blockScene.viewer.snapshot()),state);
+ assert.equal(await page.evaluate(()=>current),2);
+ const previewCamera=await page.evaluate(()=>window.blockScene.viewer.snapshot());
+ await page.locator('#finished-preview').click();assert.equal(await page.evaluate(()=>sceneOpenWalls),true,'Preview wall changes never overwrite build walls');assert.equal(await page.locator('canvas').getAttribute('data-parts'),'2');
+ await page.locator('#finished-preview').click();closeCamera(await page.evaluate(()=>window.blockScene.viewer.snapshot()),previewCamera);
+ await page.locator('[data-scene-fullscreen]').first().click();assert.equal(await page.locator('canvas').count(),1);assert.equal(await page.locator('#zoom-stage-view canvas').count(),1);assert.ok((await page.locator('canvas').boundingBox()).height>=300,'iPad landscape keeps a usable fullscreen drawing');
+ closeCamera(await page.evaluate(()=>window.blockScene.viewer.snapshot()),previewCamera);
+ await page.locator('#zoom-close').click();assert.equal(await page.locator('#stage-view canvas').count(),1);
+ assert.equal(await page.evaluate(()=>localStorage.getItem('block-lab-progress-v4')),saved);
+ await page.locator('#stage-view').screenshot({path:'/tmp/block-play-3d-ipad.png'});
+ await page.locator('[data-scene-fullscreen]').first().click();await page.keyboard.press('Escape');await page.waitForSelector('#stage-view canvas');assert.equal(await page.locator('#zoom-dialog').evaluate(el=>el.open),false);
+ // Context loss preserves region/progress and restores actionable SVG.
+ await page.evaluate(()=>document.querySelector('canvas').dispatchEvent(new Event('webglcontextlost',{cancelable:true})));
+ await page.waitForSelector('#stage svg');assert.equal(await page.locator('canvas').count(),0);
+ assert.equal(await page.evaluate(()=>current),2);assert.equal(await page.evaluate(()=>previewSection),'second');
+ assert.equal(await page.locator('#stage').isVisible(),true);
+ assert.deepEqual(errors,[]);
+ await context.setOffline(false);
+ await context.close();
+ const fallback=await browser.newContext();await fallback.addInitScript(()=>{const get=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return type==='webgl2'?null:get.call(this,type,...args);};});
+ const fp=await fallback.newPage();await fp.goto(url);await fp.locator('[data-filter="complete"]').click();await fp.locator('[data-model="scene-courtyard-home"]').click();await fp.locator('[data-scene-toggle]').first().click();await fp.waitForFunction(()=>document.querySelector('.scene-status').textContent.includes('暂时'));
+ assert.equal(await fp.locator('#stage').isVisible(),true);await fp.locator('#next').click();assert.equal(await fp.evaluate(()=>current),1);
+ await browser.close();console.log('PASS: offline first 3D, rotate without advance, separate preview camera, floor/furniture focus, single fullscreen canvas, context-loss and unsupported-WebGL SVG fallback');
+})().catch(e=>{console.error(e);process.exit(1)});

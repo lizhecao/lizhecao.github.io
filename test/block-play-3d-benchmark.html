@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>积木 3D 实机验收</title><style>body{font-family:system-ui;margin:16px}#stage{height:62vh;position:relative}canvas{width:100%;height:100%;touch-action:none}button{min-height:44px;margin:8px}pre{white-space:pre-wrap}</style><h1>500 块场景实机验收</h1><p>请在真实 iPad Safari 打开，记录型号和 iPadOS。按开始后连续单指旋转、双指缩放和平移 30 秒。空闲窗口或桌面模拟结果不用于实机验收。</p><label>设备 / iPadOS <input id="device" placeholder="iPad 型号，iPadOS 版本"></label><button id="start">开始 30 秒测试</button><div id="stage"></div><pre id="result">准备中</pre><script src="../source/block-play/scenes.js"></script><script src="../source/block-play/scenes-v2.js"></script><script type="module">
+import {createViewer} from '../source/block-play/scene-viewer.mjs';
+const colors={red:'#ec705e',blue:'#63a9d9',yellow:'#f4c55c',green:'#75ad80',cream:'#e6d8b8',orange:'#eea34b',brown:'#b48561'};
+const seed=SCENE_MODELS.find(m=>m.id==='scene-courtyard-home-v2');
+const steps=seed.steps.slice();while(steps.length<500){const i=steps.length-seed.steps.length;steps.push({pieces:[{x:i%12,z:Math.floor(i/12)%12,y:11+Math.floor(i/144),w:1,d:1,c:Object.keys(colors)[i%7],zone:'roof'}]});}
+const model={...seed,id:'benchmark-500',steps};
+const start=performance.now(),viewer=createViewer(document.querySelector('#stage'),{colors,onPick(){},onFailure(){document.querySelector('#result').textContent='WebGL 失败：保留 SVG，不能验收通过';}});
+viewer.setModel(model,{current:500,preview:true,section:'all',openWalls:true});
+requestAnimationFrame(()=>document.querySelector('#result').textContent=JSON.stringify({initialMs:performance.now()-start,metrics:viewer.metrics()},null,2));
+document.querySelector('#start').onclick=()=>{
+ const device=document.querySelector('#device').value.trim();if(!device){document.querySelector('#result').textContent='请先记录真实设备与系统。';return;}
+ const gaps=[],begin=performance.now();let previous=begin;
+ function tick(now){gaps.push(now-previous);previous=now;if(now-begin<30000){document.querySelector('#result').textContent=`请持续拖动：${Math.ceil((30000-now+begin)/1000)} 秒`;requestAnimationFrame(tick);}else{gaps.sort((a,b)=>a-b);const p95=gaps[Math.ceil(gaps.length*.95)-1];document.querySelector('#result').textContent=JSON.stringify({device,userAgent:navigator.userAgent,parts:500,durationMs:now-begin,samples:gaps.length,p95Ms:p95,withinTarget:p95<=33.3,metrics:viewer.metrics(),note:'需确认全程实际触控、前后台状态与视觉正确性'},null,2);}}
+ requestAnimationFrame(tick);
+};
+</script></html>

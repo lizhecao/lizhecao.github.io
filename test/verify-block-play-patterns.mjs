@@ -8,11 +8,12 @@ vm.runInContext(await readFile(new URL("../source/block-play/patterns.js", impor
 const storySource = await readFile(new URL("../source/block-play/stories.js", import.meta.url), "utf8").catch(() => "const STORY_LABS=[];const LAB_STORIES={};");
 vm.runInContext(storySource, context);
 vm.runInContext(await readFile(new URL('../source/block-play/scenes.js', import.meta.url), 'utf8'), context);
+vm.runInContext(await readFile(new URL('../source/block-play/scenes-v2.js', import.meta.url), 'utf8'), context);
 vm.runInContext(app.slice(0, app.indexOf("let soundChoice=")) + ";globalThis.models=MODELS;globalThis.concepts=CONCEPT_MAP;globalThis.labs=LABS;globalThis.stories=LAB_STORIES;", context);
 const { models, concepts, labs, stories } = context;
 const ids = new Set(models.map(model => model.id));
 assert.equal(ids.size, models.length, "Model IDs must be unique to preserve saved progress");
-assert.equal(models.length, 61);
+assert.equal(models.length, 64);
 const added = models.filter(model => model.collection === "reference");
 assert.equal(added.length, 20);
 assert.equal(labs.length, 12);

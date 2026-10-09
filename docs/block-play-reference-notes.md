@@ -66,3 +66,4 @@
 - 浏览器截图发现底板后绘会覆盖低矮庭院物件，增加失败的绘制顺序断言再修正为先绘底板。也补上坡面方向、滑梯高端扣平台的操作提示断言。不要只检查SVG零件数量就认定图像正确。
 - 新增验证命令：`node test/verify-block-play-scenes.mjs` 与 `node test/verify-block-play-scenes-browser.cjs [URL]`。后者复用Playwright/Chromium环境，覆盖三个栏目模型、阶段末步、室内家具、分区/全屏/成品切换、进度恢复、离线加载和iPad版面；同时运行既有patterns、page、DCA、browser与preview回归。
 - 发布继续采用独立source/publish worktree：Hexo生成后仅同步public/block-play到master的block-play目录，保留博客与DCA；分别推送工作分支后快进hexo与master，再比较线上修改资产字节并运行线上场景回归。
+- 本轮首次推送master后约六分钟未出现新Pages构建，Git远端和网页均确认新提交存在；再次用不改内容的空提交触发发布，并单独推送master后，出现Run63且线上六个修改资产逐字节一致。不能据此认定多ref推送是根因。遇到类似情况先看公开Actions记录，确认当前master；不要反复改网页或重复构建。此机`gh`是其他CLI，GitHub API匿名请求遇403限流时可读公开Actions HTML确认运行状态。

@@ -93,3 +93,15 @@ npm --prefix tools/block-play-3d run build
 实机验收后，在独立发布工作区基于 `origin/master`，只复制构建的 `public/block-play/` 为 `block-play/`。禁止复制其他博客生成内容。提交后立即推送；等待 Pages 完成后比较线上核心资产与源字节，并运行三维、普通/全屏、旧进度和离线回归。
 
 出现三维故障时先用「查看搭建图」或自动回退继续搭建。需要回滚部署内容时，恢复已知可用 `block-play/` 资产，同时在 `sw.js` / `pwa.js` 使用全新的 SW 版本（不能仅复用旧版本），再构建与发布。`verify-block-play-cache-upgrade.cjs` 已在独立临时站点验证“损坏模块 -> SVG -> 恢复模块 + 新版本 -> 删除损坏缓存 -> 离线三维恢复”，不修改当前工作区或线上内容。
+
+## iPad 直接验收预览
+
+用户询问如何验收后，提供独立的 `https://lizhecao.github.io/block-play-preview/` 路径与 `/block-play-preview/benchmark.html` 性能页。此路径只用于验收，正式 `block-play/` 保持 v16。准备命令：
+
+```sh
+node tools/block-play-3d/prepare-preview.mjs <新发布工作区>/block-play-preview
+```
+
+预览从已验证生成文件复制，单独改进度/语音键为 `block-lab-preview-*`；SW 根据路径隔离缓存，版本为 `20261009-v17-preview1`，另缓存性能页。已知 HTML 导航先查该文件缓存，其他导航再回到首页，避免离线性能页错误地显示首页。查看器、零件、场景数据与已验证实现保持同源。
+
+`test/verify-block-play-preview-isolation.cjs` 先覆盖缺失预览链接的失败用例，随后验证原第 80 步未被预览修改、缓存作用域隔离、离线首次三维和性能页均可用。部署变更只添加 `block-play-preview/`，不覆盖 `block-play/` 或其他博客页面。预览发布不视为 OpenSpec 6.3 的正式上线完成。

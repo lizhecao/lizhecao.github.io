@@ -31,7 +31,19 @@ const assert=require('node:assert/strict');
     assert.equal(await page.locator(stage+' [data-part]').count(),expected,'Preview must include unbuilt furniture in each region');
     assert.doesNotMatch(await page.locator(stage).textContent(),/还没搭到/);
     assert.equal(await page.locator(sections+' [data-section="'+zone+'"]').getAttribute('aria-pressed'),'true');
-    if(['first','second'].includes(zone))assert.ok(await page.locator(stage+' [data-role="bed"]').count());
+    if(['first','second'].includes(zone)){
+     assert.ok(await page.locator(stage+' [data-role="bed"]').count());
+     const furniture='#'+prefix+'room-furniture';
+     assert.equal(await page.locator(furniture).isVisible(),true,'Room views must explain the furniture');
+     assert.match(await page.locator(furniture+' summary').textContent(),/床.*书桌/);
+     if(fullscreen&&!await page.locator(furniture).evaluate(el=>el.open))await page.locator(furniture+' summary').click();
+     assert.equal(await page.locator(furniture+' [data-furniture="bed"] [data-part]').count(),await page.locator(stage+' [data-role="bed"]').count());
+     assert.equal(await page.locator(furniture+' [data-furniture="desk"] [data-role="book"]').count(),1);
+     const drawnHeight=await page.locator(furniture+' [data-furniture="bed"] svg').evaluate(el=>{const box=el.getBoundingClientRect(),v=el.viewBox.baseVal;return el.querySelector('g').getBBox().height*Math.min(box.width/v.width,box.height/v.height);});
+     assert.ok(drawnHeight>=65,'Furniture close-ups should crop excess blank space');
+     assert.match(await page.locator(furniture+' [data-furniture="desk"]').textContent(),/红色书本/);
+    }
+
    }
    await page.locator('#'+prefix+'finished-preview').click();
    assert.equal(await page.locator(stage+' [data-part]').count(),2,'Returning to the build must restore current progress');

@@ -15,6 +15,14 @@ for(const model of sceneModels){
  for(const zone of ['first','second','yard'])assert.ok(model.sections[zone]);
  const roles=new Set(model.steps.flatMap(s=>s.pieces.map(p=>p.role)).filter(Boolean));
  for(const role of ['door','tree','slide','bed','table'])assert.ok(roles.has(role),`${model.id}: ${role} missing`);
+ for(const zone of ['first','second']){
+  const furniture=model.steps.filter(s=>s.pieces[0].zone===zone);
+  const pillow=furniture.find(s=>s.title.includes('枕头')).pieces[0];
+  assert.equal(pillow.kind,'plate','A pillow should be low instead of a tall cube');
+  assert.equal(pillow.c,'cream');
+  assert.equal(furniture.find(s=>s.title.includes('床垫')).pieces[0].c,'blue');
+  assert.ok(furniture.some(s=>s.pieces[0].role==='book'&&s.pieces[0].kind==='plate'),'The red object must be an identified flat book');
+ }
  const placed=[],links=[];
  for(const step of model.steps){
   assert.equal(step.pieces.length,1);

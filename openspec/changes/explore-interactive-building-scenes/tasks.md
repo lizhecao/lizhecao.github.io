@@ -44,4 +44,4 @@
 - [ ] 6.3 在独立发布 worktree 生成静态文件，仅同步 block-play，比较线上资产并验证普通/全屏/离线 3D。
 - [x] 6.4 验证故障回退及带新 SW 版本的发布回滚路径，把实测步骤补入仓库文档。
 
-实施记录：见 `docs/block-play-interactive-scenes.md`。剩余 1.1/4.5/5.4 需要真实 iPad 型号、Safari 性能与亲子/实物验收，6.3 依赖这些发布前条件；本分支未部署线上，默认保留 SVG、3D 为主动选择入口。
+实施记录：见 `docs/block-play-interactive-scenes.md`。剩余 1.1/4.5/5.4 需要真实 iPad 型号、Safari 性能与亲子/实物验收，6.3 依赖这些发布前条件；正式 `block-play/` 尚未更新；已发布独立 `block-play-preview/` 供 iPad 验收，默认保留 SVG、3D 为主动选择入口。

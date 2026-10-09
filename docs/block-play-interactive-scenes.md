@@ -105,3 +105,5 @@ node tools/block-play-3d/prepare-preview.mjs <新发布工作区>/block-play-pre
 预览从已验证生成文件复制，单独改进度/语音键为 `block-lab-preview-*`；SW 根据路径隔离缓存，版本为 `20261009-v17-preview1`，另缓存性能页。已知 HTML 导航先查该文件缓存，其他导航再回到首页，避免离线性能页错误地显示首页。查看器、零件、场景数据与已验证实现保持同源。
 
 `test/verify-block-play-preview-isolation.cjs` 先覆盖缺失预览链接的失败用例，随后验证原第 80 步未被预览修改、缓存作用域隔离、离线首次三维和性能页均可用。部署变更只添加 `block-play-preview/`，不覆盖 `block-play/` 或其他博客页面。预览发布不视为 OpenSpec 6.3 的正式上线完成。
+
+预览已于本轮发布，发布提交 `c9c9e93`。线上读回 21 个运行时资产字节与部署目录一致，ES 模块 MIME 正确；正式 `block-play` 的 app/index/SW 与 v16 相同。线上通过预览进度与缓存隔离、离线首次三维/性能页、三维旋转/楼层家具/全屏状态与 WebGL 回退测试。真实 iPad 的性能与实物反馈仍等待用户提供。

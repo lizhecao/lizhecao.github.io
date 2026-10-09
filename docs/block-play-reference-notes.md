@@ -74,3 +74,4 @@
 - 回归先失败于“选择房间后预览应保持开启”，再修复。此前只验证完成搭建后的房间查看，漏掉未搭完时的成品分区；本次覆盖三套场景只搭两步时的一层、二层、屋顶、庭院、全景，普通/全屏、返回原搭建区域、存储进度不变，以及零步时离线和iPad查看完整室内家具。
 - 复用`verify-block-play-scenes-browser.cjs`与`verify-block-play-preview.cjs`；离线缓存版本同时升至v13。发布仍分别推送源分支hexo与发布分支master，比较线上app/pwa/sw字节并跑线上回归。
 - v14按用户提供的代码，在积木工坊head加入Umami defer脚本，website-id为d144413e-4aba-4522-9d75-3add8504e963。缓存版本同步升级，以便已安装页面更新HTML。追踪脚本为外部资源，不加入离线核心缓存；page回归检查脚本只出现一次。
+- v15继续加入用户提供的Cloudflare Web Analytics模块脚本，保留Umami。page回归检查两个追踪脚本各出现一次，Cloudflare配置JSON可解析且token匹配。外部脚本不进入离线核心资源清单。

@@ -76,7 +76,7 @@ npm ci --prefix tools/block-play-3d
 npm --prefix tools/block-play-3d run build
 ```
 
-锁文件、入口与构建脚本在 `tools/block-play-3d/`，MIT 许可保存在 `source/block-play/vendor/THREE-LICENSE.txt`。运行时不访问引擎 CDN。SW `20261009-v17` 完整缓存查看器、适配器、场景数据和引擎；两个现有统计脚本保持各一次。
+锁文件、入口与构建脚本在 `tools/block-play-3d/`，MIT 许可保存在 `source/block-play/vendor/THREE-LICENSE.txt`。运行时不访问引擎 CDN。打包引擎含上游 GLSL 字符串，保留其原始空白；`.gitattributes` 仅将这个生成文件标记为生成内容并豁免空白风格检查，不放宽自有代码检查。SW `20261009-v17` 完整缓存查看器、适配器、场景数据和引擎；两个现有统计脚本保持各一次。
 
 构建站点沿用现有 Hexo 依赖，`hexo generate` 后运行 `node test/verify-block-play-page.mjs` 与 `node test/verify-dca-page.mjs`，前者比较 28 个源/生成文件的实际字节，后者验证 DCA 页面未受影响。
 

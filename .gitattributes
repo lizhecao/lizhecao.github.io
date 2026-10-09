@@ -1,0 +1,2 @@
+# Preserve upstream GLSL string whitespace in the locally bundled engine.
+source/block-play/vendor/three-0.186.1.mjs linguist-generated=true -whitespace

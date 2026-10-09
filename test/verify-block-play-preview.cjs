@@ -73,6 +73,9 @@ const assert=require('node:assert/strict');
   assert.equal(await tabletPage.evaluate(()=>current),1);
   await tabletPage.locator('#finished-preview').click();
  }
+ await tabletPage.locator('[data-lab-index="1"]').click();
+ const storyDiagram=await tabletPage.locator('.lab-visual').boundingBox();
+ assert.ok(storyDiagram.height<550,'story diagrams must not stretch to the height of the long story column');
  await tablet.close();
  assert.deepEqual(errors,[]);
  console.log('PASS: normal and fullscreen thumbnails, correct model, full preview from layer view, unchanged progress, desktop/mobile placement, larger iPad drawings in both orientations and offline use');

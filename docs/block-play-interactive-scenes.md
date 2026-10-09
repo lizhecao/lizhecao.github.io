@@ -82,7 +82,7 @@ npm --prefix tools/block-play-3d run build
 
 ## 仍需实物与真实 iPad 验收
 
-目前没有收到参考 iPad 型号/iPadOS，也未进行真实 Safari 30 秒触控测试、亲子无名称识别或积木试搭。因此 OpenSpec 的 1.1、4.5、5.4 和线上发布 6.3 不能勾选完成；不能宣称 P95 ≤33.3ms 或实物结构已验证。本分支保持默认 SVG，三维为主动选择入口；实机验收通过前不替换线上版本。
+目前没有收到参考 iPad 型号/iPadOS，也未进行真实 Safari 30 秒触控测试、亲子无名称识别或积木试搭。OpenSpec 的 1.1、4.5、5.4 仍待用户线上验收，不能宣称 P95 ≤33.3ms 或实物结构已验证。用户随后明确要求「可以直接上线，线上验收吧」，授权先更新正式页面，再完成实机/实物反馈。默认 SVG、主动选择三维入口与故障回退保持不变。
 
 提供独立实机性能页 `test/block-play-3d-benchmark.html`。从工作区根目录用另一个回环端口服务，通过自己的 SSH 隧道在 iPad Safari 访问 `/test/block-play-3d-benchmark.html`。测试使用 500 块合成压力场景（包含住宅特殊件，增加砖体只用于绘制压力，非搭建教程），记录真实设备/系统、首次绘制、30 秒帧间隔 P95 和绘制调用/几何数量。开始后必须持续真实单指/双指操作，并确认视觉正确；桌面运行该页也不构成实机验收。
 
@@ -90,7 +90,7 @@ npm --prefix tools/block-play-3d run build
 
 ## 发布与回滚
 
-实机验收后，在独立发布工作区基于 `origin/master`，只复制构建的 `public/block-play/` 为 `block-play/`。禁止复制其他博客生成内容。提交后立即推送；等待 Pages 完成后比较线上核心资产与源字节，并运行三维、普通/全屏、旧进度和离线回归。
+按用户直接上线要求，在独立发布工作区基于 `origin/master`，只复制构建的 `public/block-play/` 为 `block-play/`。禁止复制其他博客生成内容。提交后立即推送；等待 Pages 完成后比较线上核心资产与源字节，并运行三维、普通/全屏、旧进度和离线回归。
 
 出现三维故障时先用「查看搭建图」或自动回退继续搭建。需要回滚部署内容时，恢复已知可用 `block-play/` 资产，同时在 `sw.js` / `pwa.js` 使用全新的 SW 版本（不能仅复用旧版本），再构建与发布。`verify-block-play-cache-upgrade.cjs` 已在独立临时站点验证“损坏模块 -> SVG -> 恢复模块 + 新版本 -> 删除损坏缓存 -> 离线三维恢复”，不修改当前工作区或线上内容。
 
@@ -107,3 +107,9 @@ node tools/block-play-3d/prepare-preview.mjs <新发布工作区>/block-play-pre
 `test/verify-block-play-preview-isolation.cjs` 先覆盖缺失预览链接的失败用例，随后验证原第 80 步未被预览修改、缓存作用域隔离、离线首次三维和性能页均可用。部署变更只添加 `block-play-preview/`，不覆盖 `block-play/` 或其他博客页面。预览发布不视为 OpenSpec 6.3 的正式上线完成。
 
 预览已于本轮发布，发布提交 `c9c9e93`。线上读回 21 个运行时资产字节与部署目录一致，ES 模块 MIME 正确；正式 `block-play` 的 app/index/SW 与 v16 相同。线上通过预览进度与缓存隔离、离线首次三维/性能页、三维旋转/楼层家具/全屏状态与 WebGL 回退测试。真实 iPad 的性能与实物反馈仍等待用户提供。
+
+## 正式上线授权与升级检查
+
+用户明确要求直接上线、在线验收后，原先的实机先行顺序改为正式部署后验收。独立发布工作区 `.claude/worktrees/block-play-3d-release` 基于预览发布 `c9c9e93`，仅更新 `block-play/`；预览和其他博客内容保留。正式路径沿用 `block-lab-progress-v4`，不把 `block-lab-preview-*` 导入正式进度。
+
+新增 `test/verify-block-play-production-upgrade.cjs` 用真实 v16 发布快照启动已有缓存和第 80 步进度，再替换为已验证 v17 构建，检查缓存升级、旧步骤、新模型从零开始、预览数据/缓存保留及断网后首次三维。此检查不是 Safari 实机性能验收。

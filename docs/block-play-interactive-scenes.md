@@ -106,10 +106,14 @@ node tools/block-play-3d/prepare-preview.mjs <新发布工作区>/block-play-pre
 
 `test/verify-block-play-preview-isolation.cjs` 先覆盖缺失预览链接的失败用例，随后验证原第 80 步未被预览修改、缓存作用域隔离、离线首次三维和性能页均可用。部署变更只添加 `block-play-preview/`，不覆盖 `block-play/` 或其他博客页面。预览发布不视为 OpenSpec 6.3 的正式上线完成。
 
-预览已于本轮发布，发布提交 `c9c9e93`。线上读回 21 个运行时资产字节与部署目录一致，ES 模块 MIME 正确；正式 `block-play` 的 app/index/SW 与 v16 相同。线上通过预览进度与缓存隔离、离线首次三维/性能页、三维旋转/楼层家具/全屏状态与 WebGL 回退测试。真实 iPad 的性能与实物反馈仍等待用户提供。
+预览发布时，发布提交为 `c9c9e93`。当时线上读回 21 个运行时资产字节与部署目录一致，ES 模块 MIME 正确；正式 `block-play` 的 app/index/SW 与 v16 相同。线上通过预览进度与缓存隔离、离线首次三维/性能页、三维旋转/楼层家具/全屏状态与 WebGL 回退测试。真实 iPad 的性能与实物反馈仍等待用户提供。
 
 ## 正式上线授权与升级检查
 
 用户明确要求直接上线、在线验收后，原先的实机先行顺序改为正式部署后验收。独立发布工作区 `.claude/worktrees/block-play-3d-release` 基于预览发布 `c9c9e93`，仅更新 `block-play/`；预览和其他博客内容保留。正式路径沿用 `block-lab-progress-v4`，不把 `block-lab-preview-*` 导入正式进度。
 
 新增 `test/verify-block-play-production-upgrade.cjs` 用真实 v16 发布快照启动已有缓存和第 80 步进度，再替换为已验证 v17 构建，检查缓存升级、旧步骤、新模型从零开始、预览数据/缓存保留及断网后首次三维。此检查不是 Safari 实机性能验收。
+
+正式页面已发布到 `https://lizhecao.github.io/block-play/`，发布提交 `e2c51df`，SW 版本 `20261009-v17`。线上读回 20 个应用运行时资产与构建逐字节一致，ES 模块 MIME 正确；预览页和 DCA 读回保持原样。正式路径通过六套场景/三个新版布局、原第 80 步与新进度独立、家具和楼层定位、单画布全屏、旋转/双指不推进、离线首次三维、故障回退，以及原 SVG 成品预览和 iPad 尺寸模拟回归。
+
+OpenSpec 6.3 已完成；1.1/4.5/5.4 仍等用户在真实 iPad 和实物上提供反馈。源分支同步到 `origin/hexo`，正式生成文件同步到 `origin/master`，避免后续从旧源重新部署覆盖新版。已有用户保持联网刷新页面以加载新版，等离线准备完成后再测试断网使用。

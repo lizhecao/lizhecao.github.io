@@ -18,6 +18,33 @@ const assert=require('node:assert/strict');
   await page.locator('#next').click();assert.equal(await page.locator('#zoom-dialog').evaluate(x=>x.open),true);
   await page.locator('#zoom-next').click();assert.equal(await page.evaluate(()=>current),2);
   await page.locator('#zoom-close').click();
+  const saved=await page.evaluate(()=>localStorage.getItem('block-lab-progress-v4'));
+  for(const fullscreen of [false,true]){
+   if(fullscreen)await page.locator('#stage').click();
+   const prefix=fullscreen?'zoom-':'',stage='#'+prefix+'stage',sections='#'+prefix+'scene-sections';
+   await page.locator('#'+prefix+'finished-preview').click();
+   for(const zone of ['first','second','roof','yard','all']){
+    await page.locator(sections+' [data-section="'+zone+'"]').click();
+    assert.equal(await page.evaluate(()=>preview),true,'Selecting a room must keep completed preview active');
+    assert.equal(await page.evaluate(()=>current),2);
+    const expected=await page.evaluate(zone=>allPieces(model).filter(p=>zone==='all'||p.zone===zone).length,zone);
+    assert.equal(await page.locator(stage+' [data-part]').count(),expected,'Preview must include unbuilt furniture in each region');
+    assert.doesNotMatch(await page.locator(stage).textContent(),/还没搭到/);
+    assert.equal(await page.locator(sections+' [data-section="'+zone+'"]').getAttribute('aria-pressed'),'true');
+    if(['first','second'].includes(zone))assert.ok(await page.locator(stage+' [data-role="bed"]').count());
+   }
+   await page.locator('#'+prefix+'finished-preview').click();
+   assert.equal(await page.locator(stage+' [data-part]').count(),2,'Returning to the build must restore current progress');
+   if(fullscreen)await page.locator('#zoom-close').click();
+  }
+  await page.locator('#scene-sections [data-section="second"]').click();
+  assert.match(await page.locator('#stage').textContent(),/还没搭到/);
+  await page.locator('#finished-preview').click();await page.locator('#scene-sections [data-section="first"]').click();
+  assert.ok(await page.locator('#stage [data-role="bed"]').count());
+  await page.locator('#finished-preview').click();
+  assert.equal(await page.locator('#scene-sections [data-section="second"]').getAttribute('aria-pressed'),'true');
+  assert.match(await page.locator('#stage').textContent(),/还没搭到/);
+  assert.equal(await page.evaluate(()=>localStorage.getItem('block-lab-progress-v4')),saved);
   const phases=await page.evaluate(()=>model.steps.map((s,i)=>i===model.steps.length-1||s.phase!==model.steps[i+1].phase?i+1:0).filter(Boolean));
   for(const n of phases){await page.evaluate(n=>move(n),n);assert.ok(await page.locator('#stage svg').count());}
   assert.equal(await page.locator('#stage [data-part="door"]').count()>0,true);
@@ -52,9 +79,15 @@ const assert=require('node:assert/strict');
  assert.equal(await page.evaluate(()=>SCENE_MODELS.length),3);
  await page.locator('[data-filter="complete"]').click();await page.locator('[data-model="'+scenes[0].id+'"]').click();
  await page.locator('#scene-sections [data-section="first"]').click();assert.ok(await page.locator('#stage [data-role="bed"]').count());
+ await page.locator('#restart').click();await page.locator('#finished-preview').click();
+ await page.locator('#scene-sections [data-section="second"]').click();
+ assert.equal(await page.evaluate(()=>current),0);assert.ok(await page.locator('#stage [data-role="bed"]').count());
+ assert.doesNotMatch(await page.locator('#stage').textContent(),/还没搭到/);
  await context.setOffline(false);
  const tablet=await browser.newContext({viewport:{width:1024,height:1400},isMobile:true,hasTouch:true});const ipad=await tablet.newPage();await ipad.goto(base);
  await ipad.locator('[data-filter="complete"]').click();await ipad.locator('[data-model="'+scenes[0].id+'"]').click();await ipad.locator('#finished-preview').click();
+ await ipad.locator('#scene-sections [data-section="second"]').click();assert.ok(await ipad.locator('#stage [data-role="bed"]').count());
+ assert.equal(await ipad.evaluate(()=>current),0);
  assert.ok((await ipad.locator('#stage svg').boundingBox()).height>=500);
  assert.equal(await ipad.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
  await ipad.locator('#stage-view').screenshot({path:'/tmp/block-scenes-ipad.png'});

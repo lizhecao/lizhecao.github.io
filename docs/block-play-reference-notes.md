@@ -67,3 +67,9 @@
 - 新增验证命令：`node test/verify-block-play-scenes.mjs` 与 `node test/verify-block-play-scenes-browser.cjs [URL]`。后者复用Playwright/Chromium环境，覆盖三个栏目模型、阶段末步、室内家具、分区/全屏/成品切换、进度恢复、离线加载和iPad版面；同时运行既有patterns、page、DCA、browser与preview回归。
 - 发布继续采用独立source/publish worktree：Hexo生成后仅同步public/block-play到master的block-play目录，保留博客与DCA；分别推送工作分支后快进hexo与master，再比较线上修改资产字节并运行线上场景回归。
 - 本轮首次推送master后约六分钟未出现新Pages构建，Git远端和网页均确认新提交存在；再次用不改内容的空提交触发发布，并单独推送master后，出现Run63且线上六个修改资产逐字节一致。不能据此认定多ref推送是根因。遇到类似情况先看公开Actions记录，确认当前master；不要反复改网页或重复构建。此机`gh`是其他CLI，GitHub API匿名请求遇403限流时可读公开Actions HTML确认运行状态。
+
+## 2026-10-09：成品预览支持室内分区（v13）
+
+- 修复成品预览点击区域按钮后退出预览、按当前步骤显示“还没搭到这一区域”的问题。预览区域独立于搭建区域，普通/全屏都按完整步骤绘制所选房间或庭院；返回搭建恢复原区域、层视图与进度。切换模型或推进步骤时重置预览区域。
+- 回归先失败于“选择房间后预览应保持开启”，再修复。此前只验证完成搭建后的房间查看，漏掉未搭完时的成品分区；本次覆盖三套场景只搭两步时的一层、二层、屋顶、庭院、全景，普通/全屏、返回原搭建区域、存储进度不变，以及零步时离线和iPad查看完整室内家具。
+- 复用`verify-block-play-scenes-browser.cjs`与`verify-block-play-preview.cjs`；离线缓存版本同时升至v13。发布仍分别推送源分支hexo与发布分支master，比较线上app/pwa/sw字节并跑线上回归。

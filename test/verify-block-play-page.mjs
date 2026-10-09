@@ -9,6 +9,7 @@ assert.equal(manifest.start_url, "./");
 assert.equal(manifest.scope, "./");
 const html = await readFile(new URL("index.html", root), "utf8");
 assert.match(html, /61 个创意造型/);
+assert.equal((html.match(/<script defer src="https:\/\/cloud\.umami\.is\/script\.js" data-website-id="d144413e-4aba-4522-9d75-3add8504e963"><\/script>/g)||[]).length,1,"Include the requested Umami tracker exactly once");
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
 assert.equal(new Set(ids).size, ids.length, "HTML IDs must be unique");
 const files = new Set(["index.html", "sw.js", ...manifest.icons.map(icon => icon.src)]);

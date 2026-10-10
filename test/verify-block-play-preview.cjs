@@ -38,8 +38,16 @@ const assert=require('node:assert/strict');
   await page.locator('#zoom-finished-preview').click();
   assert.equal(await page.locator('#zoom-stage [data-part]').count(),total);
   assert.equal(await page.evaluate(()=>current),1);
+  const savedProgress=await page.evaluate(()=>localStorage.getItem('block-lab-progress-v4'));
+  for(let i=0;i<3;i++)await page.locator('#zoom-stage').click();
+  assert.equal(await page.evaluate(()=>preview),true,'clicking a finished drawing must stay in preview');
+  assert.equal(await page.evaluate(()=>current),1,'clicking a finished drawing must not advance the build');
+  assert.equal(await page.evaluate(()=>localStorage.getItem('block-lab-progress-v4')),savedProgress);
+  assert.doesNotMatch(await page.locator('#zoom-status').textContent(),/进入下一步/);
   await page.locator('#zoom-finished-preview').click();
   assert.match(await page.locator('#zoom-stage').textContent(),/从上往下看/);
+  await page.locator('#zoom-stage').click();
+  assert.equal(await page.evaluate(()=>current),2,'drawing clicks still advance in building mode');
   await page.locator('#zoom-close').click();
  }
  await page.setViewportSize({width:1280,height:900});
@@ -60,6 +68,11 @@ const assert=require('node:assert/strict');
  await tabletPage.locator('#next').click();
  assert.equal(await tabletPage.locator('#zoom-dialog').evaluate(el=>el.open),true,'iPad start must open fullscreen');
  await tabletPage.locator('#zoom-close').click();
+ await tabletPage.locator('#finished-preview').tap();await tabletPage.locator('#stage').tap();
+ for(let i=0;i<3;i++)await tabletPage.locator('#zoom-stage').tap();
+ assert.equal(await tabletPage.evaluate(()=>preview),true,'iPad taps must keep finished preview active');
+ assert.equal(await tabletPage.evaluate(()=>current),1,'iPad taps must preserve building progress');
+ await tabletPage.locator('#zoom-preview').tap();await tabletPage.locator('#zoom-close').tap();
  for(const viewport of [{width:768,height:1024},{width:1024,height:768},{width:1194,height:834}]){
   await tabletPage.setViewportSize(viewport);
   const image=await tabletPage.locator('#stage svg').boundingBox();

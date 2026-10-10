@@ -94,7 +94,7 @@ npm --prefix tools/block-play-3d run build
 
 出现三维故障时先用「查看搭建图」或自动回退继续搭建。需要回滚部署内容时，恢复已知可用 `block-play/` 资产，同时在 `sw.js` / `pwa.js` 使用全新的 SW 版本（不能仅复用旧版本），再构建与发布。`verify-block-play-cache-upgrade.cjs` 已在独立临时站点验证“损坏模块 -> SVG -> 恢复模块 + 新版本 -> 删除损坏缓存 -> 离线三维恢复”，不修改当前工作区或线上内容。
 
-## iPad 直接验收预览
+## iPad 直接验收预览（历史，现已下线）
 
 用户询问如何验收后，提供独立的 `https://lizhecao.github.io/block-play-preview/` 路径与 `/block-play-preview/benchmark.html` 性能页。此路径只用于验收，正式 `block-play/` 保持 v16。准备命令：
 
@@ -117,3 +117,13 @@ node tools/block-play-3d/prepare-preview.mjs <新发布工作区>/block-play-pre
 正式页面已发布到 `https://lizhecao.github.io/block-play/`，发布提交 `e2c51df`，SW 版本 `20261009-v17`。线上读回 20 个应用运行时资产与构建逐字节一致，ES 模块 MIME 正确；预览页和 DCA 读回保持原样。正式路径通过六套场景/三个新版布局、原第 80 步与新进度独立、家具和楼层定位、单画布全屏、旋转/双指不推进、离线首次三维、故障回退，以及原 SVG 成品预览和 iPad 尺寸模拟回归。
 
 OpenSpec 6.3 已完成；1.1/4.5/5.4 仍等用户在真实 iPad 和实物上提供反馈。源分支同步到 `origin/hexo`，正式生成文件同步到 `origin/master`，避免后续从旧源重新部署覆盖新版。已有用户保持联网刷新页面以加载新版，等离线准备完成后再测试断网使用。
+
+## 成品搭建图点击修复与独立预览下线
+
+用户要求下线独立 `block-play-preview/`，随后反馈成品状态下点「查看搭建图」再点图会推进步骤。原因是全屏 SVG 点击处理没有检查 `preview`。现在只有分步模式的图案点击才推进步骤；成品模式的 SVG 和三维提示均不再引导用户进入下一步。SW / PWA 版本同步更新为 `20261010-v18`，让已有离线安装获得修复。
+
+`verify-block-play-preview.cjs` 先在旧发布版本复现失败，再覆盖连续三次点击、iPad 触摸、进度不变、提示及返回分步后正常推进。`verify-block-play-3d-browser.cjs` 补测成品三维切回 SVG、楼层和进度保留，继续覆盖离线与 WebGL 回退。`verify-block-play-production-upgrade.cjs` 使用真实 v17 发布快照升级到 v18，验证原第 80 步、64 模型及离线首次三维。
+
+下线删除独立预览首页、性能页和全部应用资产，只在旧注册地址保留 `sw.js` 退役脚本（源文件 `tools/block-play-3d/retire-preview-sw.js`）。不可同时删除这个地址：旧 SW 遇到 404 仍可能返回离线首页。退役脚本在线更新后删除预览作用域的缓存、注销自己，并把当前预览窗口带到正式 `block-play/`；不删除正式缓存或任何保存的搭建进度。完全离线的旧设备须联网一次才能获得下线更新。
+
+`verify-block-play-preview-retirement.cjs` 从真实发布快照建立正式和预览缓存，先验证预览确实能离线打开，再部署退役脚本，验证首页/性能页 404、已有窗口跳转、预览缓存和注册移除，以及正式缓存、第 80 步、离线可用性保留。以上测试与生成资产/DCA 检查均通过。历史 `prepare-preview.mjs` 和隔离测试保留作本地工具，不再作为线上验收入口；实际验收使用正式地址，真实 iPad 性能反馈仍未替代。

@@ -49,7 +49,7 @@ window.blockScene=(()=>{
   if(viewer.canvas.parentElement!==hosts[prefix])viewer.attach(hosts[prefix]);
   const nextKey=JSON.stringify([state.model.id,state.current,state.preview,state.section,state.openWalls,state.mirror]);
   if(key!==nextKey){objects=viewer.setModel(state.model,state);key=nextKey;detail.replaceChildren();list.replaceChildren();for(const o of objects){const b=document.createElement('button');b.type='button';b.textContent=(state.model.rooms?.find(r=>r.id===state.model.objects?.[o.id]?.roomId)?.name||'')+(state.model.rooms?' · ':'')+o.name;b.dataset.object=o.id;b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>viewer.focus(o.id));list.append(b);}const selected=objects.find(o=>o.id===viewer.selectedId);if(selected)showObject(selected);}
-  if(state.fullscreen)$('zoom-status').textContent=(state.preview?'完整成品':`第 ${state.current} / ${state.model.steps.length} 步`)+' · 转动查看，再点「我搭好了」';
+  if(state.fullscreen)$('zoom-status').textContent=state.preview?'完整成品 · 转动查看':`第 ${state.current} / ${state.model.steps.length} 步 · 转动查看，再点「我搭好了」`;
  }
  return {clearFocus,configure(fn){getState=fn;sync();},sync,get active(){return Boolean(enabled&&!failed&&getState&&getState().model.level==='complete');},get viewer(){return viewer;}};
 })();

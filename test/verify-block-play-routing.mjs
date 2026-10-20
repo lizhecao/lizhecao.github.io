@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {parseRoute} from '../source/block-play/routes.mjs';
+import {stepGuidance} from '../source/block-play/scene-state.mjs';
+const ids={models:['house'],labs:['locking'],missions:['animal-town']};
+assert.deepEqual(parseRoute('#/build/house',ids),{page:'build',id:'house'});
+assert.equal(parseRoute('#learning',ids).page,'lab');assert.equal(parseRoute('#choose',ids).page,'models');
+assert.equal(parseRoute('#/missions/animal-town',ids).id,'animal-town');
+assert.equal(parseRoute('#/build/missing',ids).page,'models');assert.ok(parseRoute('#/build/missing',ids).notice);
+assert.equal(parseRoute('#/lab/%E0%A4%A',ids).page,'lab');
+assert.equal(parseRoute('#/settings',ids).page,'settings');
+assert.equal(stepGuidance({steps:[{pieces:[{zone:'first',role:'bed'}]}]},1).id,'first-bed');
+assert.equal(stepGuidance({steps:[{pieces:[{zone:'second',objectId:'bed-b'}]}]},1).id,'bed-b');
+assert.equal(stepGuidance({steps:[{pieces:[{zone:'yard',role:'tree'}]}]},1),null);
+assert.equal(stepGuidance({steps:[]},0),null);
+console.log('PASS: direct/legacy/invalid routes, stable IDs and old/new indoor object identification');

@@ -1,6 +1,12 @@
 // One coordinate unit is a 2 x 2 Duplo brick: body 80 x 48 x 80 LDU.
 // Dimension reference: https://library.ldraw.org/parts/6083 (3437.dat).
 export const BRICK_HEIGHT = .6;
+export function stepGuidance(model,current){
+ const p=model.steps[current-1]?.pieces[0];
+ if(!p||!['first','second'].includes(p.zone))return null;
+ const id=p.objectId||(['bed','table','book','chair'].includes(p.role)?`${p.zone}-${p.role==='book'?'table':p.role}`:null);
+ return id?{id,section:p.zone}:null;
+}
 export function dimensions(p) {
  const height=p.kind==='baseplate'?0:p.kind==='plate'?.5:p.kind==='door'?3:p.kind==='window'||p.kind==='thin'?2:p.kind==='slide'?3.5:1;
  return {width:p.w,depth:p.d||1,height:height*BRICK_HEIGHT,bottom:p.y*BRICK_HEIGHT,top:(p.y+height)*BRICK_HEIGHT};

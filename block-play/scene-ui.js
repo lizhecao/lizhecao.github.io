@@ -1,6 +1,6 @@
 'use strict';
 window.blockScene=(()=>{
- let getState,viewer,loading,enabled=false,failed=false,objects=[],key='',modelId='';
+ let getState,viewer,loading,enabled=false,failed=false,objects=[],key='',modelId='',guideKey='',pendingView=null;
  const $=id=>document.getElementById(id),hosts={},bars={};
  const panel=document.createElement('div');panel.className='scene-object-panel';panel.hidden=true;
  const list=document.createElement('div');list.className='scene-object-list';list.setAttribute('aria-label','定位家具');
@@ -9,19 +9,19 @@ window.blockScene=(()=>{
  for(const prefix of ['','zoom-']){
   const host=document.createElement('div');host.className='scene-canvas';host.hidden=true;$(prefix+'stage-view').append(host);hosts[prefix]=host;
   const bar=document.createElement('div');bar.className='scene-toolbar';bar.hidden=true;
-  bar.innerHTML='<button type="button" data-scene-toggle aria-pressed="false">3D 旋转查看</button><span class="scene-tools" hidden>'+actions.map(([a,t])=>`<button type="button" data-scene-action="${a}">${t}</button>`).join('')+'<button type="button" data-scene-walls aria-pressed="true">显示外墙</button>'+(prefix?'':'<button type="button" data-scene-fullscreen>⤢ 全屏</button>')+'</span><span class="scene-status" role="status"></span>';
+  bar.innerHTML='<button type="button" data-scene-toggle aria-pressed="false">3D 旋转查看</button><span class="scene-tools" hidden>'+actions.map(([a,t])=>`<button type="button" data-scene-action="${a}">${t}</button>`).join('')+'<button type="button" data-scene-walls aria-pressed="true">显示外墙</button><button type="button" data-step-view hidden>回到本步视角</button></span><span class="scene-status" role="status"></span>';
   $(prefix+'stage-view').after(bar);bars[prefix]=bar;
   bar.addEventListener('click',e=>{
    const b=e.target.closest('button');if(!b)return;
    if(b.hasAttribute('data-scene-toggle')){enabled=!enabled;failed=false;sync();}
    else if(b.dataset.sceneAction)viewer?.command(b.dataset.sceneAction);
    else if(b.hasAttribute('data-scene-walls')){getState().toggleWalls();sync();}
-   else if(b.hasAttribute('data-scene-fullscreen'))getState().openZoom();
+   else if(b.hasAttribute('data-step-view')){const g=getState().guide;if(g)viewer?.focus(g.id);}
   });
  }
  function fallback(message){enabled=false;failed=true;viewer?.dispose();viewer=null;for(const b of Object.values(bars))b.querySelector('.scene-status').textContent=message||'暂时无法打开三维画面，可以继续用搭建图。';sync();}
  async function ensure(){if(viewer||loading||failed)return;for(const b of Object.values(bars))b.querySelector('.scene-status').textContent='正在打开三维场景…';
-  loading=import('./scene-viewer.mjs').then(({createViewer})=>{if(!enabled)return;viewer=createViewer(hosts[getState().fullscreen?'zoom-':''],{colors:getState().colors,onPick:showObject,onFailure:fallback});key='';for(const b of Object.values(bars))b.querySelector('.scene-status').textContent='单指旋转 · 双指缩放、平移';}).catch(()=>fallback()).finally(()=>{loading=null;sync();});
+  loading=import('./scene-viewer.mjs').then(({createViewer})=>{if(!enabled||!getState().visible)return;viewer=createViewer(hosts[getState().fullscreen?'zoom-':''],{colors:getState().colors,onPick:showObject,onFailure:fallback});key='';for(const b of Object.values(bars))b.querySelector('.scene-status').textContent='单指旋转 · 双指缩放、平移';}).catch(()=>fallback()).finally(()=>{loading=null;sync();});
  }
  function showObject(object){
   if(!objects.some(o=>o.id===object.id))return;
@@ -34,22 +34,30 @@ window.blockScene=(()=>{
   for(const b of list.children)b.setAttribute('aria-pressed',String(b.dataset.object===object.id));
  }
  function clearFocus(){viewer?.clearFocus();detail.replaceChildren();for(const b of list.children)b.setAttribute('aria-pressed','false');}
- function sync(){if(!getState)return;const state=getState(),complete=state.model.level==='complete',active=enabled&&complete&&!failed,prefix=state.fullscreen?'zoom-':'';
-  if(modelId!==state.model.id){modelId=state.model.id;detail.replaceChildren();}
+ function sync(){if(!getState)return;const state=getState(),complete=state.model.level==='complete',prefix=state.fullscreen?'zoom-':'';
+  if(modelId!==state.model.id){modelId=state.model.id;enabled=false;failed=false;guideKey='';detail.replaceChildren();}
+  const nextGuide=state.guide?state.model.id+':'+state.guide.id:'',newGuide=nextGuide!==guideKey;
+  if(state.preview||nextGuide&&newGuide)enabled=true;
+  const active=enabled&&complete&&!failed&&state.visible;
   for(const p of ['','zoom-']){
-   bars[p].hidden=!complete;hosts[p].hidden=!active||p!==prefix;$(p+'stage').hidden=active;
+   bars[p].hidden=!complete||!state.visible;hosts[p].hidden=!active||p!==prefix;$(p+'stage').hidden=active;
+   bars[p].querySelector('[data-scene-toggle]').hidden=state.preview&&!failed;
+   bars[p].querySelector('[data-step-view]').hidden=!state.guide||p!==prefix;
    bars[p].querySelector('[data-scene-toggle]').textContent=active?'查看搭建图':'3D 旋转查看';bars[p].querySelector('[data-scene-toggle]').setAttribute('aria-pressed',String(active));bars[p].querySelector('.scene-tools').hidden=!active;
    bars[p].querySelector('[data-scene-walls]').textContent=state.openWalls?'显示外墙':'打开外墙';bars[p].querySelector('[data-scene-walls]').setAttribute('aria-pressed',String(!state.openWalls));
    if(active){$(p+'room-furniture').hidden=true;bars[p].querySelector('.scene-status').textContent=(state.model.sections[state.section]||'全景')+' · 单指旋转，双指缩放/平移';}
   }
   panel.hidden=!active;
-  if(!active){if(viewer){viewer.dispose();viewer=null;key='';}return;}
+  if(!active){if(viewer){viewer.dispose();viewer=null;key='';}if(!state.visible)guideKey='';return;}
   bars[prefix].after(panel);
   if(!viewer){ensure();return;}
   if(viewer.canvas.parentElement!==hosts[prefix])viewer.attach(hosts[prefix]);
   const nextKey=JSON.stringify([state.model.id,state.current,state.preview,state.section,state.openWalls,state.mirror]);
   if(key!==nextKey){objects=viewer.setModel(state.model,state);key=nextKey;detail.replaceChildren();list.replaceChildren();for(const o of objects){const b=document.createElement('button');b.type='button';b.textContent=(state.model.rooms?.find(r=>r.id===state.model.objects?.[o.id]?.roomId)?.name||'')+(state.model.rooms?' · ':'')+o.name;b.dataset.object=o.id;b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>viewer.focus(o.id));list.append(b);}const selected=objects.find(o=>o.id===viewer.selectedId);if(selected)showObject(selected);}
+  if(pendingView){if(pendingView.selected)viewer.focus(pendingView.selected,true);viewer.restore(pendingView.camera);pendingView=null;}
+  else if(state.guide&&(newGuide||viewer.selectedId===state.guide.id))viewer.focus(state.guide.id,!newGuide);
+  guideKey=nextGuide;
   if(state.fullscreen)$('zoom-status').textContent=state.preview?'完整成品 · 转动查看':`第 ${state.current} / ${state.model.steps.length} 步 · 转动查看，再点「我搭好了」`;
  }
- return {clearFocus,configure(fn){getState=fn;sync();},sync,get active(){return Boolean(enabled&&!failed&&getState&&getState().model.level==='complete');},get viewer(){return viewer;}};
+ return {clearFocus,capture(){return viewer?{camera:viewer.snapshot(),selected:viewer.selectedId}:null;},restoreView(value){pendingView=value;},configure(fn){getState=fn;sync();},sync,get active(){return Boolean(enabled&&!failed&&getState&&getState().visible&&getState().model.level==='complete');},get viewer(){return viewer;}};
 })();
